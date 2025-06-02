@@ -1,0 +1,70 @@
+{
+  "name": "portuense-mgr",
+  "version": "1.0.0",
+  "description": "Gestor de jugadores para el Portuense",
+  "main": "electron/main.cjs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"cross-env ELECTRON_DISABLE_SECURITY_WARNINGS=true electron .\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "electron .",
+    "dist": "electron-builder",
+    "lint": "eslint ."
+  },
+  "build": {
+    "appId": "com.portuense.manager",
+    "productName": "PortuenseManager",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "buildResources": "icon"
+    },
+    "asar": true,
+    "mac": {
+      "icon": "icon/icon.icns",
+      "target": "dmg"
+    },
+    "win": {
+      "icon": "icon/icon.ico",
+      "target": "nsis"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "icon"
+    }
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.5",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "portuense-mgr": "file:",
+    "react": "^19.0.0",
+    "react-big-calendar": "^1.18.0",
+    "react-bootstrap": "^2.10.9",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.5.3",
+    "react-router-dom": "^7.5.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^26.2.0",
+    "electron-builder": "^24.11.0",
+    "eslint": "^9.22.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^4.1.8",
+    "vite": "^6.3.1"
+  }
+}
