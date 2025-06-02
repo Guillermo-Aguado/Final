@@ -20,6 +20,7 @@ export default function JugadorForm({
   const [edad, setEdad] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [haPagadoCuota, setHaPagadoCuota] = useState(false);
+  const [imagen, setImagen] = useState(null);
 
   useEffect(() => {
     if (mode === "editar" && initialData) {
@@ -33,7 +34,8 @@ export default function JugadorForm({
       setEdad(initialData.edad || "");
       setDescripcion(initialData.descripcion || "");
       setHaPagadoCuota(initialData.ha_pagado_cuota || false);
-    } else if (mode === "crear") {
+      setImagen(null);  // Solo se sube si cambia
+    } else {
       setNombre("");
       setP_apellido("");
       setS_apellido("");
@@ -44,6 +46,7 @@ export default function JugadorForm({
       setEdad("");
       setDescripcion("");
       setHaPagadoCuota(false);
+      setImagen(null);
     }
   }, [mode, initialData, show]);
 
@@ -51,20 +54,23 @@ export default function JugadorForm({
     e.preventDefault();
     const token = getToken();
 
-    const body = {
-      nombre,
-      p_apellido,
-      s_apellido,
-      equipo,
-      categoria,
-      subcategoria,
-      posicion,
-      edad: parseInt(edad, 10),
-      descripcion,
-    };
+    const formData = new FormData();
+    formData.append("nombre", nombre);
+    formData.append("p_apellido", p_apellido);
+    formData.append("s_apellido", s_apellido);
+    formData.append("equipo", equipo);
+    formData.append("categoria", categoria);
+    formData.append("subcategoria", subcategoria);
+    formData.append("posicion", posicion);
+    formData.append("edad", edad);
+    formData.append("descripcion", descripcion);
 
     if (mode === "editar" && categoria !== "SEN") {
-      body.ha_pagado_cuota = haPagadoCuota;
+      formData.append("ha_pagado_cuota", haPagadoCuota);
+    }
+
+    if (imagen) {
+      formData.append("imagen", imagen);
     }
 
     const response = await fetch(
@@ -74,10 +80,9 @@ export default function JugadorForm({
       {
         method: mode === "editar" ? "PUT" : "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(body),
+        body: formData,
       }
     );
 
@@ -96,7 +101,7 @@ export default function JugadorForm({
         <Modal.Title>{mode === "crear" ? "Nuevo Jugador" : "Editar Jugador"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} encType="multipart/form-data">
           <Form.Group className="mb-3">
             <Form.Label>Nombre</Form.Label>
             <Form.Control value={nombre} onChange={(e) => setNombre(e.target.value)} required />
@@ -164,6 +169,15 @@ export default function JugadorForm({
               />
             </Form.Group>
           )}
+
+          <Form.Group className="mb-3">
+            <Form.Label>Imagen del Jugador</Form.Label>
+            <Form.Control
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImagen(e.target.files[0])}
+            />
+          </Form.Group>
 
           <Button variant="primary" type="submit">
             {mode === "crear" ? "Agregar Jugador" : "Guardar Cambios"}

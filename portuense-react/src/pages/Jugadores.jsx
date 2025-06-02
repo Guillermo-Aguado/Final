@@ -15,6 +15,7 @@ export default function Jugadores() {
   const [jugadores, setJugadores] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingJugador, setEditingJugador] = useState(null);
+  const [user, setUser] = useState({});
   const navigate = useNavigate();
 
   const fetchJugadores = useCallback(async () => {
@@ -34,7 +35,9 @@ export default function Jugadores() {
 
   useEffect(() => {
     fetchJugadores();
-  }, [searchParams]);
+    const storedUser = JSON.parse(sessionStorage.getItem('user') || '{}');
+    setUser(storedUser);
+  }, [fetchJugadores]);
 
   const handleCreate = () => {
     setEditingJugador(null);
@@ -61,6 +64,9 @@ export default function Jugadores() {
     setSearchParams(newParams);
   };
 
+  // Admin y categoría ≠ SEN
+  const mostrarCuota = user.groups?.includes('admin') && searchParams.get('categoria') !== 'SEN';
+
   return (
     <Container className="mt-4">
       <Button variant="secondary" onClick={() => navigate('/dashboard')} className="mb-3">
@@ -86,15 +92,6 @@ export default function Jugadores() {
               <option value="">Todos</option>
               {equipos.map(eq => (
                 <option key={eq} value={eq}>{eq}</option>
-              ))}
-            </Form.Select>
-          </Col>
-          <Col md={3}>
-            <Form.Label>Categoría</Form.Label>
-            <Form.Select name="categoria" value={searchParams.get('categoria') || ''} onChange={handleFilterChange}>
-              <option value="">Todas</option>
-              {categorias.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
               ))}
             </Form.Select>
           </Col>
@@ -131,17 +128,28 @@ export default function Jugadores() {
             <th>Edad</th>
             <th>Equipo</th>
             <th>Categoría</th>
+            {mostrarCuota && <th>Cuota</th>}
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {jugadores.map((jugador) => (
-            <JugadorRow
-              key={jugador.id}
-              jugador={jugador}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+            <tr key={jugador.id}>
+              <td>{jugador.nombre}</td>
+              <td>{jugador.posicion}</td>
+              <td>{jugador.edad}</td>
+              <td>{jugador.equipo}</td>
+              <td>{jugador.categoria}</td>
+              {mostrarCuota && (
+                <td style={{ color: jugador.ha_pagado_cuota ? 'green' : 'red' }}>
+                  {jugador.ha_pagado_cuota ? 'Pagada' : 'Pendiente'}
+                </td>
+              )}
+              <td>
+                <Button size="sm" onClick={() => handleEdit(jugador)} className="me-2">Editar</Button>
+                <Button size="sm" variant="danger" onClick={() => handleDelete(jugador.id)}>Eliminar</Button>
+              </td>
+            </tr>
           ))}
         </tbody>
       </Table>

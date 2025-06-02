@@ -7,6 +7,12 @@ from django.contrib.auth import authenticate, login
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def jugadores_con_cuota_pendiente(request):
+    jugadores = Jugador.objects.exclude(categoria='SEN').filter(ha_pagado_cuota=False)
+    serializer = JugadorSerializer(jugadores, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])

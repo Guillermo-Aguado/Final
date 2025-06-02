@@ -11,6 +11,7 @@ import DetalleJugador from './pages/DetalleJugador';
 import ContratoJugador from './pages/ContratoJugador';
 import AcademiaDashboard from './pages/AcademiaDashboard';
 import UserManager from './pages/UserManager';
+import PaginaCuotas from './pages/Cuota';
 // import AcademiaDashboard from './pages/AcademiaDashboard';
 // import CategoriaOpciones from './pages/CategoriaOpciones';
 // import CategoriaDetalle from './pages/CategoriaDetalle';
@@ -30,7 +31,7 @@ export default function Router() {
         <Route path="/jugadores/:id/contrato" element={<ContratoJugador />} />
         <Route path="/academia" element={<AcademiaDashboard />} />
         <Route path="/usuarios" element={<UserManager />} />
-             
+         <Route path="/cuotas" element={<PaginaCuotas />} />    
       </Routes>
     </BrowserRouter>
   );

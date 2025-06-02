@@ -2,9 +2,8 @@
 
 from pathlib import Path
 from datetime import timedelta
-import pymysql
 import os
-pymysql.install_as_MySQLdb()
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,7 +19,7 @@ SECRET_KEY = 'django-insecure-4u3)dfcz6sgu7vesq7)0)w_js59d30$-_ae4ih+8!29)-kp09*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -112,6 +111,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

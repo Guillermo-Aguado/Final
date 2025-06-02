@@ -18,7 +18,7 @@ export default function AppHeader() {
   };
 
   return (
-    <Navbar bg="light" expand="lg" className="shadow-sm mb-4">
+    <Navbar style={{ backgroundColor: '#ff1e56' }} expand="lg" className="shadow-sm mb-4">
       <Container fluid>
         <Navbar.Brand onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
           ⚽ Portuense Manager

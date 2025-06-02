@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap'; // Añade Button
 import Panel from '../components/Panel';
 import panelData from '../data/academiaPanels.json';
 import BackButton from '../components/BackButton';
@@ -19,6 +19,10 @@ export default function AcademiaDashboard() {
       setUser(storedUser);
     }
   }, [navigate]);
+
+  const handleCuotasClick = () => {
+    navigate('/cuotas');
+  };
 
   return (
     <>
@@ -45,6 +49,15 @@ export default function AcademiaDashboard() {
               </Col>
             ))}
         </Row>
+
+        {/* Botón visible solo si es admin */}
+        {user.groups?.includes('admin') && (
+          <div className="text-center mt-4">
+            <Button variant="danger" onClick={handleCuotasClick}>
+              Ver Cuotas
+            </Button>
+          </div>
+        )}
       </Container>
     </>
   );
