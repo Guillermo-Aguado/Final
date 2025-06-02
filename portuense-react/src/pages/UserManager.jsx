@@ -1,13 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import {
-  Modal,
-  Table,
-  Button,
-  Form,
-  Row,
-  Col,
-  Spinner,
-} from "react-bootstrap";
+import { Modal, Table, Button, Form, Row, Col, Spinner } from "react-bootstrap";
 import { getToken } from "../utils/auth";
 import { useAuth } from "../hooks/useAuth";
 import CrearUsuarioModal from "../components/CrearUsuarioModal";
@@ -151,6 +143,7 @@ export default function UserManager({ show, onClose }) {
               <thead>
                 <tr>
                   <th>Usuario</th>
+                  <th>Grupo</th> {/* ← Añadido */}
                   <th>Permisos</th>
                   <th>Contraseña</th>
                   <th>Acciones</th>
@@ -160,6 +153,22 @@ export default function UserManager({ show, onClose }) {
                 {usuarios.map((user) => (
                   <tr key={user.id}>
                     <td>{user.username}</td>
+                    <td>
+                      <Form.Select
+                        size="sm"
+                        value={user.grupo || ""}
+                        onChange={(e) => {
+                          user.grupo = e.target.value;
+                          setUsuarios([...usuarios]);
+                        }}
+                      >
+                        <option value="">Sin grupo</option>
+                        <option value="admin">Admin</option>
+                        <option value="coordinador">Coordinador</option>
+                        <option value="entrenador">Entrenador</option>
+                        {/* Añade aquí los que tengas en tu sistema */}
+                      </Form.Select>
+                    </td>
                     <td>
                       <div className="text-end mb-2">
                         <Button
@@ -181,8 +190,7 @@ export default function UserManager({ show, onClose }) {
                               const key = `${cat}-${eq}`;
                               const checked =
                                 user.permisos?.some(
-                                  (p) =>
-                                    p.categoria === cat && p.equipo === eq
+                                  (p) => p.categoria === cat && p.equipo === eq
                                 ) || false;
 
                               return (
@@ -191,9 +199,7 @@ export default function UserManager({ show, onClose }) {
                                   type="checkbox"
                                   label={eq}
                                   checked={checked}
-                                  onChange={() =>
-                                    togglePermiso(cat, eq, user)
-                                  }
+                                  onChange={() => togglePermiso(cat, eq, user)}
                                 />
                               );
                             })}
