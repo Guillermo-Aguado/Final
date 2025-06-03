@@ -27,7 +27,7 @@ export default function Login() {
 
       saveToken(token, false); // Guarda en sessionStorage
 
-      const meRes = await fetch('http://localhost:8000/api/me/', {
+      const meRes = await fetch('http://portuense-manager.ddns.net:8000/api/me/', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
