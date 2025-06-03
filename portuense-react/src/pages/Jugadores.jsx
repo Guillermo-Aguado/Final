@@ -21,7 +21,7 @@ export default function Jugadores() {
   const fetchJugadores = useCallback(async () => {
     try {
       const queryString = searchParams.toString();
-      const response = await fetch(`http://localhost:8000/api/jugadores/?${queryString}`, {
+      const response = await fetch(`http:/portuense-manager.ddns.net:8000/api/jugadores/?${queryString}`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },

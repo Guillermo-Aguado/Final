@@ -15,7 +15,7 @@ export default function DetalleJugador() {
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
 
-    fetch(`http://localhost:8000/api/jugadores/${id}/`, {
+    fetch(`http://portuense-manager.ddns.net:8000/api/jugadores/${id}/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

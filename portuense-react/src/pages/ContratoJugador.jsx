@@ -23,7 +23,7 @@ export default function ContratoJugador() {
   const token = getToken();
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/contratos/jugador/${id}/`, {
+    fetch(`http://portuense-manager.ddns.net:8000/api/contratos/jugador/${id}/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -49,8 +49,8 @@ export default function ContratoJugador() {
     const isNuevo = contrato === null;
 
     const url = isNuevo
-      ? `http://localhost:8000/api/contratos/`
-      : `http://localhost:8000/api/contratos/${contrato.id}/`;
+      ? `http://portuense-manager.ddns.net:8000/api/contratos/`
+      : `http://portuense-manager.ddns.net/api/contratos/${contrato.id}/`;
 
     const method = isNuevo ? 'POST' : 'PATCH';
     const body = isNuevo

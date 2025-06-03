@@ -1,33 +1,40 @@
-import { Modal, Button, Form } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
-import React from 'react';
+import { Modal, Button, Form } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import React from "react";
 
+export default function CrearEventoModal({
+  show,
+  onClose,
+  fecha,
+  tipo: tipoInicial,
+}) {
+  const [descripcion, setDescripcion] = useState("");
+  const [equipo2, setEquipo2] = useState("");
+  const [localizacion, setLocalizacion] = useState("");
+  const [tipo, setTipo] = useState(tipoInicial || "Entrenamiento");
+  const [fechaInput, setFechaInput] = useState("");
+  const API_BASE = "http://portuense-manager.ddns.net:8000";
 
-export default function CrearEventoModal({ show, onClose, fecha, tipo: tipoInicial }) {
-  const [descripcion, setDescripcion] = useState('');
-  const [equipo2, setEquipo2] = useState('');
-  const [localizacion, setLocalizacion] = useState('');
-  const [tipo, setTipo] = useState(tipoInicial || 'Entrenamiento');
-  const [fechaInput, setFechaInput] = useState('');
-
-  const token = sessionStorage.getItem('accessToken');
+  const token = sessionStorage.getItem("accessToken");
 
   useEffect(() => {
     if (show) {
-      setDescripcion('');
-      setEquipo2('');
-      setLocalizacion('');
-      setTipo(tipoInicial || 'Entrenamiento');
+      setDescripcion("");
+      setEquipo2("");
+      setLocalizacion("");
+      setTipo(tipoInicial || "Entrenamiento");
 
       // Si viene fecha del calendario, precargar
       if (fecha) {
         const localDate = new Date(fecha);
-        const isoString = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000)
+        const isoString = new Date(
+          localDate.getTime() - localDate.getTimezoneOffset() * 60000
+        )
           .toISOString()
           .slice(0, 16); // formato "YYYY-MM-DDTHH:mm"
         setFechaInput(isoString);
       } else {
-        setFechaInput('');
+        setFechaInput("");
       }
     }
   }, [show, tipoInicial, fecha]);
@@ -37,15 +44,15 @@ export default function CrearEventoModal({ show, onClose, fecha, tipo: tipoInici
       descripcion,
       fecha: new Date(fechaInput).toISOString(),
       categoria: tipo,
-      equipo1: 'Portuense F.C.',
-      equipo2: tipo === 'Partido' ? equipo2 : '',
+      equipo1: "Portuense F.C.",
+      equipo2: tipo === "Partido" ? equipo2 : "",
       localizacion,
     };
 
-    const res = await fetch('http://localhost:8000/api/eventos/', {
-      method: 'POST',
+    const res = await fetch("http://portuense-manager.ddns.net:8000/api/eventos/", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(evento),
@@ -54,7 +61,7 @@ export default function CrearEventoModal({ show, onClose, fecha, tipo: tipoInici
     if (res.ok) {
       onClose(true);
     } else {
-      console.error('Error al crear evento');
+      console.error("Error al crear evento");
     }
   };
 
@@ -93,7 +100,7 @@ export default function CrearEventoModal({ show, onClose, fecha, tipo: tipoInici
             />
           </Form.Group>
 
-          {tipo === 'Partido' && (
+          {tipo === "Partido" && (
             <Form.Group className="mt-3">
               <Form.Label>Equipo contrario</Form.Label>
               <Form.Control

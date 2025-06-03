@@ -37,7 +37,7 @@ export default function Calendario() {
   const isAdmin = user.groups?.includes("admin");
 
   const fetchEventos = useCallback(() => {
-    fetch("http://localhost:8000/api/eventos/", {
+    fetch("http://portuense-manager.ddns.net:8000/api/eventos/", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
