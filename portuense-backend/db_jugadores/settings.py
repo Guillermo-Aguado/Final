@@ -64,7 +64,9 @@ MIDDLEWARE = [
 ]
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://portuense-manager.ddns.net:5173"
 ]
 CORS_ALLOW_METHODS = [
     'GET',
@@ -75,10 +77,17 @@ CORS_ALLOW_METHODS = [
     'PATCH'
     
 ]
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
-    'content-type',
-    'authorization',
-    'x-requested-width'
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
     
 ]
 ROOT_URLCONF = 'db_jugadores.urls'
