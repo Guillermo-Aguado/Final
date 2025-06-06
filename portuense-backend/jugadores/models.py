@@ -60,6 +60,18 @@ class JugadorFilter(django_filters.FilterSet):
     class Meta:
         model = Jugador
         fields = ['posicion', 'categoria', 'equipo', 'edad']
+
+
+class ComentarioJugador(models.Model):
+    jugador = models.ForeignKey('Jugador', on_delete=models.CASCADE, related_name='comentarios')
+    autor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    titulo = models.CharField(max_length=100)
+    contenido = models.TextField()
+    fecha_emision = models.DateField()
+    fecha_creacion = models.DateField()
+
+    def __str__(self):
+        return f"{self.titulo} ({self.jugador.nombre})"
 class Contrato(models.Model):
     jugador = models.OneToOneField('Jugador', on_delete=models.CASCADE, related_name='contrato')
     contrato_fijo = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

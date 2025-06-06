@@ -62,3 +62,27 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 8px var(--accent-color);
   border-color: var(--accent-color);
 }
+table {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: #222; /* encabezado más oscuro */
+}
+
+tr {
+  background-color: #1e1e1e;
+  transition: background-color 0.2s ease;
+}
+
+tr:hover {
+  background-color: #2a2a2a;
+}
+
+td, th {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  color: #d0d0d0; /* gris claro, no blanco chillón */
+}

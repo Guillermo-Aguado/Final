@@ -251,6 +251,13 @@ class JugadorViewSet(viewsets.ModelViewSet):
         jugador = serializer.save()  # Guarda el objeto actualizado
         print(f"Jugador {jugador.id} actualizado con éxito")  # Aquí podemos hacer una depuración
 
+class ComentarioJugadorViewSet(viewsets.ModelViewSet):
+    queryset = ComentarioJugador.objects.all().order_by('-fecha_creacion')
+    serializer_class = ComentarioJugadorSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(autor=self.request.user)
 class ContratoViewSet(viewsets.ModelViewSet):
     queryset = Contrato.objects.all()
     serializer_class = ContratoSerializer

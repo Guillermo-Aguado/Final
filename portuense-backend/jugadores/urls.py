@@ -16,7 +16,7 @@ router.register(r'files', ExcelFileViewSet)
 router.register(r'usuarios', UserViewSet, basename='usuario')
 router.register(r'contratos', ContratoViewSet)
 router.register(r'groups', GroupViewSet)
-
+router.register(r'comentarios-jugador', ComentarioJugadorViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -26,6 +26,7 @@ urlpatterns = [
     path('api/crear-usuario/', views.crear_usuario, name='crear_usuario'),
     path('api/usuarios/', views.listar_usuarios, name='listar_usuarios'),
     path('api/actualizar-usuario/<int:user_id>/', views.actualizar_usuario, name='actualizar_usuario'),
-     path('jugadores/cuota-pendiente/', jugadores_con_cuota_pendiente, name='cuota-pendiente'),
+    path('jugadores/cuota-pendiente/', jugadores_con_cuota_pendiente, name='cuota-pendiente'),
+    # path('api/jugadores/<int:jugador_id>/comentarios/', views.comentarios_por_jugador, name='comentarios_por_jugador'),
 
 ] + router.urls
