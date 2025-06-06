@@ -124,7 +124,7 @@ class PDF (models.Model):
         return f"{self.nombre} - {self.carpeta.nombre}"
    
    
-from django.db import models
+
 
 class Evento(models.Model):
     CATEGORIAS = [

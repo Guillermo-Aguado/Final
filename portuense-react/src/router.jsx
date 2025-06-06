@@ -14,9 +14,7 @@ import UserManager from './pages/UserManager';
 import PaginaCuotas from './pages/Cuota';
 import AcademiaCategoria from './pages/AcademiaCategoria';
 import DireccionDeportiva from './pages/DireccionDeportiva';
-// import AcademiaDashboard from './pages/AcademiaDashboard';
-// import CategoriaOpciones from './pages/CategoriaOpciones';
-// import CategoriaDetalle from './pages/CategoriaDetalle';
+import PrimerEquipoDireccion from './pages/DireccionDeportiva/PrimerEquipo';
 import NuevoComentario from './pages/NuevoComentario';
 export default function Router() {
   return (
@@ -37,6 +35,7 @@ export default function Router() {
         <Route path="/usuarios" element={<UserManager />} />
         <Route path="/cuotas" element={<PaginaCuotas />} />    
         <Route path="/direccion-deportiva" element={<DireccionDeportiva />} />
+        <Route path="/direccion-deportiva/primer-equipo" element={<PrimerEquipoDireccion />} />
       </Routes>
     </BrowserRouter>
   );
