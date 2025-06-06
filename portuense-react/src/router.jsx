@@ -12,10 +12,11 @@ import ContratoJugador from './pages/ContratoJugador';
 import AcademiaDashboard from './pages/AcademiaDashboard';
 import UserManager from './pages/UserManager';
 import PaginaCuotas from './pages/Cuota';
+import AcademiaCategoria from './pages/AcademiaCategoria';
 // import AcademiaDashboard from './pages/AcademiaDashboard';
 // import CategoriaOpciones from './pages/CategoriaOpciones';
 // import CategoriaDetalle from './pages/CategoriaDetalle';
-
+import NuevoComentario from './pages/NuevoComentario';
 export default function Router() {
   return (
     <BrowserRouter>
@@ -28,10 +29,12 @@ export default function Router() {
         {/* <Route path="/academia" element={<AcademiaDashboard />}/> */}
         <Route path="/jugadores" element={<Jugadores />} />
         <Route path="/jugadores/:id" element={<DetalleJugador/>}/>
+        <Route path="/jugadores/:id/comentario-nuevo" element={<NuevoComentario />} />
         <Route path="/jugadores/:id/contrato" element={<ContratoJugador />} />
         <Route path="/academia" element={<AcademiaDashboard />} />
+        <Route path="/academia/:categoria" element={<AcademiaCategoria />} />
         <Route path="/usuarios" element={<UserManager />} />
-         <Route path="/cuotas" element={<PaginaCuotas />} />    
+        <Route path="/cuotas" element={<PaginaCuotas />} />    
       </Routes>
     </BrowserRouter>
   );

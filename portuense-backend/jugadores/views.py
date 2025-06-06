@@ -6,6 +6,10 @@ from .serializers import *
 from django.contrib.auth import authenticate, login
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import get_object_or_404
+from datetime import date
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -196,7 +200,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class JugadorViewSet(viewsets.ModelViewSet):
     queryset = Jugador.objects.all()
     serializer_class = JugadorSerializer
-    
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = JugadorFilter
     permission_classes = [IsAuthenticated]
     
     # Método para obtener las opciones para poblar dropdowns
@@ -247,6 +252,37 @@ class JugadorViewSet(viewsets.ModelViewSet):
         """
         jugador = serializer.save()  # Guarda el objeto actualizado
         print(f"Jugador {jugador.id} actualizado con éxito")  # Aquí podemos hacer una depuración
+
+class ComentarioJugadorViewSet(viewsets.ModelViewSet):
+    queryset = ComentarioJugador.objects.all().order_by('-fecha_creacion')
+    serializer_class = ComentarioJugadorSerializer
+    # permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(
+            autor=self.request.user,
+            fecha_emision=date.today(auto_now_add=True),
+            fecha_creacion=date.today(auto_now_add=True)
+        )
+
+    @action(detail=False, methods=['get', 'post'], url_path='jugador/(?P<jugador_id>[^/.]+)')
+    def por_jugador(self, request, jugador_id=None):
+        jugador = get_object_or_404(Jugador, pk=jugador_id)
+
+        if request.method == 'GET':
+            comentarios = ComentarioJugador.objects.filter(jugador=jugador).order_by('-fecha_creacion')
+            serializer = self.get_serializer(comentarios, many=True)
+            return Response(serializer.data)
+
+        elif request.method == 'POST':
+            data = request.data.copy()
+            data['jugador'] = jugador.id
+            data['autor'] = request.user.id
+            serializer = self.get_serializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ContratoViewSet(viewsets.ModelViewSet):
     queryset = Contrato.objects.all()

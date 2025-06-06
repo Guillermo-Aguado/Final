@@ -12,7 +12,7 @@ export default function CrearUsuarioModal({ show, onHide, onSuccess }) {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const response = await fetch("http://portuense-manager.ddns.net:8000/api/groups/", {
+        const response = await fetch("http://localhost:8000/api/groups/", {
           headers: {
             Authorization: `Bearer ${getToken()}`,
           },
@@ -28,7 +28,7 @@ export default function CrearUsuarioModal({ show, onHide, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http:/portuense-manager.ddns.net:8000/api/usuarios/", {
+    const response = await fetch("http:/localhost:8000/api/usuarios/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export default function CrearUsuarioModal({ show, onHide, onSuccess }) {
   };
 
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} >
       <Modal.Header closeButton>
         <Modal.Title>Crear nuevo usuario</Modal.Title>
       </Modal.Header>

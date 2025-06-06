@@ -59,7 +59,11 @@ class JugadorSerializer(serializers.ModelSerializer):
         if obj.imagen:
             return request.build_absolute_uri(obj.imagen.url)
         return None
-
+class ComentarioJugadorSerializer(serializers.ModelSerializer):
+    autor_nombre = serializers.CharField(source='autor.username', read_only=True)
+    class Meta:
+        model = ComentarioJugador
+        fields= '__all__'
 class CarpetaSerializer(serializers.ModelSerializer):
     subcarpetas = serializers.SerializerMethodField()
 
