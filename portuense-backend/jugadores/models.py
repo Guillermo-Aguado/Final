@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+import django_filters
 
 class Categoria(models.Model):
     codigo = models.CharField(max_length=20, unique=True)
@@ -53,6 +53,13 @@ class Jugador(models.Model):
 
     def __str__(self):
         return f"{self.nombre} {self.p_apellido} {self.s_apellido} "
+
+class JugadorFilter(django_filters.FilterSet):
+    posicion = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Jugador
+        fields = ['posicion', 'categoria', 'equipo', 'edad']
 class Contrato(models.Model):
     jugador = models.OneToOneField('Jugador', on_delete=models.CASCADE, related_name='contrato')
     contrato_fijo = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

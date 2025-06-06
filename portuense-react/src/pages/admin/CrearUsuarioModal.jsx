@@ -57,7 +57,7 @@ export default function CrearUsuarioModal({ show, onHide, onSuccess }) {
   };
 
   return (
-    <Modal show={show} onHide={onHide} fullscreen>
+    <Modal show={show} onHide={onHide} >
       <Modal.Header closeButton>
         <Modal.Title>Crear nuevo usuario</Modal.Title>
       </Modal.Header>

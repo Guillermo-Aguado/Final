@@ -6,6 +6,8 @@ from .serializers import *
 from django.contrib.auth import authenticate, login
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -196,7 +198,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class JugadorViewSet(viewsets.ModelViewSet):
     queryset = Jugador.objects.all()
     serializer_class = JugadorSerializer
-    
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = JugadorFilter
     permission_classes = [IsAuthenticated]
     
     # Método para obtener las opciones para poblar dropdowns
