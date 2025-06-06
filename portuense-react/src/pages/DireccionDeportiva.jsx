@@ -50,3 +50,5 @@ export default function DireccionDeportiva() {
     </>
   );
 }
+//TODO: Manejar el autorización de la dirección deportiva, tanto en el UserManager como aquí.
+//TODO: 
