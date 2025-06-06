@@ -2,7 +2,7 @@ import { Navbar, Container, Nav, Dropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import React from "react";
-import logo from '../assets/images/fondo rcportuense.png'; // o `.svg` si es el caso
+import logo from "../assets/images/fondo rcportuense.png"; // o `.svg` si es el caso
 
 export default function AppHeader() {
   const navigate = useNavigate();
@@ -27,16 +27,32 @@ export default function AppHeader() {
       <Container fluid>
         <Navbar.Brand
           onClick={() => navigate("/dashboard")}
-          style={{ cursor: "pointer" }}
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "1rem",
+          }}
         >
           <img
             src={logo}
             alt="Logo Portuense"
             style={{ width: "50px", height: "50px" }}
           />
-              Portuense Manager
+          <span
+            style={{ fontWeight: "bold", fontSize: "1.25rem", color: "white" }}
+          >
+            Portuense Manager
+          </span>
         </Navbar.Brand>
-
+        <Nav className="me-auto" style={{ marginLeft: "2rem" }}>
+          <Nav.Link
+            onClick={() => navigate("/direccion-deportiva")}
+            style={{ color: "white", fontWeight: "500", fontSize: "1rem" }}
+          >
+            Dirección Deportiva
+          </Nav.Link>
+        </Nav>
         <Nav className="ms-auto">
           <Dropdown align="end">
             <Dropdown.Toggle

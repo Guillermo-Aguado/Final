@@ -15,7 +15,7 @@ export default function Dashboard() {
     <>
       <AppHeader />
       <Container className="mt-4">
-        <h2 className="mb-4">Panel de gestión del Portuense</h2>
+        <h2 className="mb-4">Panel de gestión</h2>
 
         <Row className="mt-4">
           <Col md={6} lg={4} className="mb-4">
