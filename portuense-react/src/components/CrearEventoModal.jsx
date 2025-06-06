@@ -13,7 +13,7 @@ export default function CrearEventoModal({
   const [localizacion, setLocalizacion] = useState("");
   const [tipo, setTipo] = useState(tipoInicial || "Entrenamiento");
   const [fechaInput, setFechaInput] = useState("");
-  const API_BASE = "http://portuense-manager.ddns.net:8000";
+  const API_BASE = "http://localhost:8000";
 
   const token = sessionStorage.getItem("accessToken");
 
@@ -49,7 +49,7 @@ export default function CrearEventoModal({
       localizacion,
     };
 
-    const res = await fetch("http://portuense-manager.ddns.net:8000/api/eventos/", {
+    const res = await fetch("http://localhost:8000/api/eventos/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
