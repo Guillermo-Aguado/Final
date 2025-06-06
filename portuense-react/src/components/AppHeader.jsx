@@ -41,6 +41,8 @@ export default function AppHeader() {
           />
           <span
             style={{ fontWeight: "bold", fontSize: "1.25rem", color: "white" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "black")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "white")}
           >
             Portuense Manager
           </span>
@@ -49,6 +51,8 @@ export default function AppHeader() {
           <Nav.Link
             onClick={() => navigate("/direccion-deportiva")}
             style={{ color: "white", fontWeight: "500", fontSize: "1rem" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "black")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "white")}
           >
             Dirección Deportiva
           </Nav.Link>
