@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import { getToken } from "../utils/auth";
 import React from 'react';
+import BackButton from "../components/BackButton"
 
 export default function NuevoComentario() {
   const { id } = useParams(); // ID del jugador desde la URL
@@ -48,6 +49,7 @@ export default function NuevoComentario() {
 
   return (
     <Container className="mt-4" style={{ maxWidth: "600px" }}>
+      <BackButton to="/dashboard" label="←" />
       <h3>Nuevo Comentario</h3>
       {error && <Alert variant="danger">{error}</Alert>}
       <Form onSubmit={handleSubmit}>
@@ -100,7 +102,6 @@ export default function NuevoComentario() {
 }
 
 
-//TODO Fix the API POST Comentarios   -- Sabado mañana
 //TODO: Crear la mierda de Dirección Deportiva y asociar los permisos --Sabado mañana
 //TODO: Crear el Excel de los cojones en Frontend y Asociarlo al Backend --Sabado tarde
 //TODO: Poner carpetas y PDFs en cada jugador --Sabado Mañana
