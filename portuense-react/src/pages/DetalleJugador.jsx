@@ -30,7 +30,7 @@ export default function DetalleJugador() {
       .catch(() => setLoading(false));
 
     // Obtener comentarios
-    fetch(`http://localhost:8000/api/jugadores/${id}/comentarios/`, {
+    fetch(`http://localhost:8000/api/comentarios-jugador/jugador/${id}/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -122,33 +122,46 @@ export default function DetalleJugador() {
 
             <hr className="my-4" />
 
-            <div>
-              <h5 className="mb-3">Comentarios</h5>
-              {comentarios.length === 0 ? (
-                <p className="text-muted">No hay comentarios todavía.</p>
-              ) : (
-                comentarios.map((comentario) => (
-                  <div
-                    key={comentario.id}
-                    className="mb-3 p-3"
-                    style={{
-                      backgroundColor: "#1a1a1a",
-                      border: "1px solid #ff1e5630",
-                      borderRadius: "8px",
-                    }}
-                  >
-                    <h6 className="mb-1" style={{ color: "#ff1e56" }}>
-                      {comentario.titulo}
-                    </h6>
-                    <p style={{ whiteSpace: "pre-wrap" }}>{comentario.contenido}</p>
-                    <div className="text-muted small">
-                      Por <strong>{comentario.autor.username}</strong> el{" "}
-                      {new Date(comentario.fecha_creada).toLocaleString()}
-                    </div>
-                  </div>
-                ))
-              )}
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h5 className="mb-0">Comentarios</h5>
+              <Button
+                variant="outline-primary"
+                size="sm"
+                onClick={() => navigate(`/jugadores/${jugador.id}/comentario-nuevo`)}
+              >
+                Añadir Comentario
+              </Button>
             </div>
+
+            {comentarios.length === 0 ? (
+              <p className="text-muted">No hay comentarios todavía.</p>
+            ) : (
+              comentarios.map((comentario) => (
+                
+                <div
+                  key={comentario.id}
+                  className="mb-3 p-3"
+                  style={{
+                    backgroundColor: "#1a1a1a",
+                    border: "1px solid #ff1e5630",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <h6 className="mb-1" style={{ color: "#ff1e56" }}>
+                    {comentario.titulo}
+                  </h6>
+                  <p style={{ whiteSpace: "pre-wrap" }}>{comentario.contenido}</p>
+                  <div className="d-flex justify-content-between mt-2">
+                    <small  style={{ color: "#ff1e56" }}>
+                      {new Date(comentario.fecha_creacion).toLocaleString()}
+                    </small>
+                    <small>
+                      <strong>{comentario.autor.username}</strong>
+                    </small>
+                  </div>
+                </div>
+              ))
+            )}
           </Card.Body>
         </Card>
       </div>

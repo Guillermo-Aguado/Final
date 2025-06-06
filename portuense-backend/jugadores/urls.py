@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/usuarios/', views.listar_usuarios, name='listar_usuarios'),
     path('api/actualizar-usuario/<int:user_id>/', views.actualizar_usuario, name='actualizar_usuario'),
     path('jugadores/cuota-pendiente/', jugadores_con_cuota_pendiente, name='cuota-pendiente'),
+   
     # path('api/jugadores/<int:jugador_id>/comentarios/', views.comentarios_por_jugador, name='comentarios_por_jugador'),
 
 ] + router.urls
