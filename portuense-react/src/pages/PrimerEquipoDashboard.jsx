@@ -32,7 +32,13 @@ export default function PrimerEquipoDashboard() {
       <BackButton to="/dashboard" label="←"/>
       <Row>
         {panelData
-          .filter(panel => isVisible(panel.visibleTo))
+           .filter((panel) =>
+              user.permisos?.some(
+                (permiso) =>
+                  permiso.categoria === panel.categoria &&
+                  permiso.equipo === panel.equipo
+              )
+            )
           .map((panel, index) => (
             <Col md={6} lg={4} className="mb-4" key={index}>
               <Panel

@@ -13,12 +13,24 @@ export default function PrimerEquipoDireccion() {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    const storedUser = JSON.parse(sessionStorage.getItem("user") || "{}");
-    if (!storedUser.username) {
+    const storedUser = sessionStorage.getItem("user");
+    if (!storedUser) {
       navigate("/");
-    } else {
-      setUser(storedUser);
+      return;
     }
+
+    const parsedUser = JSON.parse(storedUser);
+    if (!parsedUser.username) {
+      navigate("/");
+      return;
+    }
+
+    // Asegúrate de que tenga permisos
+    if (!parsedUser.permisos || !Array.isArray(parsedUser.permisos)) {
+      parsedUser.permisos = []; // Evitar errores si no vienen
+    }
+
+    setUser(parsedUser);
   }, [navigate]);
 
   return (
@@ -28,17 +40,24 @@ export default function PrimerEquipoDireccion() {
         <h2 className="mb-4">Documentación - Primer Equipo</h2>
         <BackButton to="/direccion-deportiva" label="←" />
         <Row>
-          {panelData.map((panel, idx) => (
-            <Col md={6} lg={4} className="mb-4" key={idx}>
-              <Panel
-                title={panel.title}
-                text={`Documentos y PDFs del equipo ${panel.equipo}`}
-                // ahora redirigimos a DocsyExcel, con categoría y equipo en la ruta
-                redirect={`/direccion-deportiva/primer-equipo/${panel.categoria}/${panel.equipo}`}
-                buttonText="Ver Documentos"
-              />
-            </Col>
-          ))}
+          {panelData
+            .filter((panel) =>
+              user.permisos?.some(
+                (permiso) =>
+                  permiso.categoria === panel.categoria &&
+                  permiso.equipo === panel.equipo
+              )
+            )
+            .map((panel, idx) => (
+              <Col md={6} lg={4} className="mb-4" key={idx}>
+                <Panel
+                  title={panel.title}
+                  text={`Documentos y PDFs del equipo ${panel.equipo}`}
+                  redirect={`/direccion-deportiva/primer-equipo/${panel.categoria}/${panel.equipo}`}
+                  buttonText="Ver Documentos"
+                />
+              </Col>
+            ))}
         </Row>
       </Container>
     </>
