@@ -1,8 +1,6 @@
-// src/pages/DireccionDeportiva/ClubesRivales.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ModalJugadoresCoinciden from "../../components/ModalJugadoresCoinciden";
-
 import {
   Table,
   Button,
@@ -12,6 +10,7 @@ import {
   Row,
   Col,
   Spinner,
+  Modal,
 } from "react-bootstrap";
 import AppHeader from "../../components/AppHeader";
 import BackButton from "../../components/BackButton";
@@ -25,9 +24,16 @@ export default function ClubesRivales() {
     posicion: "",
   });
   const [modalClubId, setModalClubId] = useState(null);
-
   const [cargando, setCargando] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [nuevoClub, setNuevoClub] = useState({
+    nombre: "",
+    ciudad: "",
+    imagen: null,
+  });
+
   const token = sessionStorage.getItem("accessToken");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:8000/api/clubes-rivales/", {
@@ -37,49 +43,80 @@ export default function ClubesRivales() {
       .then(setClubes)
       .catch((err) => console.error("Error al cargar clubes:", err));
   }, [token]);
-  const navigate = useNavigate();
 
   const buscar = async () => {
-  setCargando(true);
-  const nuevosConteos = {};
+    setCargando(true);
+    const nuevosConteos = {};
 
-  // Recorremos cada club individualmente
-  for (const club of clubes) {
-    const params = new URLSearchParams({ club: club.id });
-    Object.entries(filtros).forEach(([key, val]) => {
-      if (val) params.append(key, val);
-    });
+    for (const club of clubes) {
+      const params = new URLSearchParams({ club: club.id });
+      Object.entries(filtros).forEach(([key, val]) => {
+        if (val) params.append(key, val);
+      });
 
-    try {
-      const res = await fetch(
-        `http://localhost:8000/api/jugadores-rivales/?${params.toString()}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const data = await res.json();
-      nuevosConteos[club.id] = data.length;
-    } catch (err) {
-      console.error(`Error al contar jugadores del club ${club.nombre}`, err);
+      try {
+        const res = await fetch(
+          `http://localhost:8000/api/jugadores-rivales/?${params.toString()}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = await res.json();
+        nuevosConteos[club.id] = data.length;
+      } catch (err) {
+        console.error(`Error al contar jugadores del club ${club.nombre}`, err);
+      }
     }
-  }
 
-  setConteos(nuevosConteos);
-  setCargando(false);
-};
-
+    setConteos(nuevosConteos);
+    setCargando(false);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFiltros((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleCreateClub = async () => {
+    const formData = new FormData();
+    formData.append("nombre", nuevoClub.nombre);
+    formData.append("ciudad", nuevoClub.ciudad);
+    if (nuevoClub.imagen) {
+      formData.append("imagen", nuevoClub.imagen);
+    }
+
+    try {
+      await fetch("http://localhost:8000/api/clubes-rivales/", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      setShowCreateModal(false);
+      setNuevoClub({ nombre: "", ciudad: "", imagen: null });
+      // recargar clubes
+      const res = await fetch("http://localhost:8000/api/clubes-rivales/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setClubes(data);
+    } catch (err) {
+      console.error("Error al crear club:", err);
+    }
+  };
+
   return (
     <>
       <AppHeader />
       <Container className="mt-4">
-        <BackButton to="/direccion-deportiva" />
-        <h2 className="mb-4">Clubes Rivales</h2>
+        <BackButton to="/dashboard" />
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2>Clubes Rivales</h2>
+          <Button variant="success" onClick={() => setShowCreateModal(true)}>
+            + Crear Club
+          </Button>
+        </div>
 
         {/* Filtros */}
         <Form className="mb-4">
@@ -156,7 +193,6 @@ export default function ClubesRivales() {
                     )}
                   </div>
                 </td>
-
                 <td>
                   <Button
                     size="sm"
@@ -173,6 +209,56 @@ export default function ClubesRivales() {
           </tbody>
         </Table>
       </Container>
+
+      {/* Modal de creación de club */}
+      <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Crear nuevo Club</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Nombre</Form.Label>
+              <Form.Control
+                type="text"
+                value={nuevoClub.nombre}
+                onChange={(e) =>
+                  setNuevoClub({ ...nuevoClub, nombre: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Ciudad</Form.Label>
+              <Form.Control
+                type="text"
+                value={nuevoClub.ciudad}
+                onChange={(e) =>
+                  setNuevoClub({ ...nuevoClub, ciudad: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Escudo</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={(e) =>
+                  setNuevoClub({ ...nuevoClub, imagen: e.target.files[0] })
+                }
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowCreateModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={handleCreateClub}>
+            Crear
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <ModalJugadoresCoinciden
         show={modalClubId !== null}
         onHide={() => setModalClubId(null)}
