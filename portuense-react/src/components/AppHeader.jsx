@@ -57,6 +57,16 @@ export default function AppHeader() {
             Dirección Deportiva
           </Nav.Link>
         </Nav>
+        <Nav className="me-auto" style={{ marginLeft: "2rem" }}>
+          <Nav.Link
+            onClick={() => navigate("/clubes-rivales")}
+            style={{ color: "white", fontWeight: "500", fontSize: "1rem" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "black")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "white")}
+          >
+            Rivales
+          </Nav.Link>
+        </Nav>
         <Nav className="ms-auto">
           <Dropdown align="end">
             <Dropdown.Toggle
