@@ -130,9 +130,10 @@ class Evento(models.Model):
     CATEGORIAS = [
         ('Partido', 'Partido'),
         ('Entrenamiento', 'Entrenamiento'),
+        ('Reunion', 'Reunión'),
     ]
 
-    descripcion = models.TextField()
+    descripcion = models.TextField(null=True)
     fecha = models.DateTimeField()
     categoria = models.CharField(max_length=20, choices=CATEGORIAS, default='Partido')
     equipo1 = models.CharField(max_length=45, default='Racing Club Portuense')
@@ -141,9 +142,12 @@ class Evento(models.Model):
 
     def __str__(self):
         if self.categoria == 'Partido':
-            return f"{self.fecha.date()} - Partido: {self.equipo1} VS {self.equipo2}"
+            return f"{self.fecha.strftime('%Y-%m-%d')} - Partido: {self.equipo1} vs {self.equipo2 or 'TBD'}"
+        elif self.categoria == 'Entrenamiento':
+            return f"{self.fecha.strftime('%Y-%m-%d')} - Entrenamiento ({self.equipo1})"
         else:
-            return f"{self.fecha.date()} - Entrenamiento: {self.equipo1}"
+            return f"{self.fecha.strftime('%Y-%m-%d')} - Reunión ({self.descripcion[:30]}...)"
+
                                                      
 class PermisoPersonalizado(models.Model):
     CATEGORIAS = [
