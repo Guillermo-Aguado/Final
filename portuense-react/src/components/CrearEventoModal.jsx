@@ -2,36 +2,29 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import React from "react";
 
-export default function CrearEventoModal({
-  show,
-  onClose,
-  fecha,
-  tipo: tipoInicial,
-}) {
+export default function CrearEventoModal({ show, onClose, fecha, tipo: tipoInicial }) {
   const [descripcion, setDescripcion] = useState("");
+  const [equipo1, setEquipo1] = useState("Portuense F.C.");
   const [equipo2, setEquipo2] = useState("");
   const [localizacion, setLocalizacion] = useState("");
   const [tipo, setTipo] = useState(tipoInicial || "Entrenamiento");
   const [fechaInput, setFechaInput] = useState("");
-  const API_BASE = "http://localhost:8000";
 
   const token = sessionStorage.getItem("accessToken");
 
   useEffect(() => {
     if (show) {
       setDescripcion("");
+      setEquipo1("Portuense F.C.");
       setEquipo2("");
       setLocalizacion("");
       setTipo(tipoInicial || "Entrenamiento");
 
-      // Si viene fecha del calendario, precargar
       if (fecha) {
         const localDate = new Date(fecha);
-        const isoString = new Date(
-          localDate.getTime() - localDate.getTimezoneOffset() * 60000
-        )
+        const isoString = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000)
           .toISOString()
-          .slice(0, 16); // formato "YYYY-MM-DDTHH:mm"
+          .slice(0, 16);
         setFechaInput(isoString);
       } else {
         setFechaInput("");
@@ -44,10 +37,16 @@ export default function CrearEventoModal({
       descripcion,
       fecha: new Date(fechaInput).toISOString(),
       categoria: tipo,
-      equipo1: "Portuense F.C.",
-      equipo2: tipo === "Partido" ? equipo2 : "",
       localizacion,
     };
+
+    if (tipo === "Partido" || tipo === "Entrenamiento") {
+      evento.equipo1 = equipo1;
+    }
+
+    if (tipo === "Partido") {
+      evento.equipo2 = equipo2;
+    }
 
     const res = await fetch("http://localhost:8000/api/eventos/", {
       method: "POST",
@@ -77,6 +76,7 @@ export default function CrearEventoModal({
             <Form.Select value={tipo} onChange={(e) => setTipo(e.target.value)}>
               <option value="Entrenamiento">Entrenamiento</option>
               <option value="Partido">Partido</option>
+              <option value="Reunion">Reunión</option>
             </Form.Select>
           </Form.Group>
 
@@ -100,9 +100,21 @@ export default function CrearEventoModal({
             />
           </Form.Group>
 
+          {(tipo === "Partido" || tipo === "Entrenamiento") && (
+            <Form.Group className="mt-3">
+              <Form.Label>Equipo </Form.Label>
+              <Form.Control
+                type="text"
+                value={equipo1}
+                onChange={(e) => setEquipo1(e.target.value)}
+                required
+              />
+            </Form.Group>
+          )}
+
           {tipo === "Partido" && (
             <Form.Group className="mt-3">
-              <Form.Label>Equipo contrario</Form.Label>
+              <Form.Label>Visitantes</Form.Label>
               <Form.Control
                 type="text"
                 value={equipo2}

@@ -101,3 +101,7 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ['id', 'name']
+class CeldaExcelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CeldaExcel
+        fields = '__all__'

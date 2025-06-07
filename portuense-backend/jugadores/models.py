@@ -124,15 +124,16 @@ class PDF (models.Model):
         return f"{self.nombre} - {self.carpeta.nombre}"
    
    
-from django.db import models
+
 
 class Evento(models.Model):
     CATEGORIAS = [
         ('Partido', 'Partido'),
         ('Entrenamiento', 'Entrenamiento'),
+        ('Reunion', 'Reunión'),
     ]
 
-    descripcion = models.TextField()
+    descripcion = models.TextField(null=True)
     fecha = models.DateTimeField()
     categoria = models.CharField(max_length=20, choices=CATEGORIAS, default='Partido')
     equipo1 = models.CharField(max_length=45, default='Racing Club Portuense')
@@ -141,9 +142,12 @@ class Evento(models.Model):
 
     def __str__(self):
         if self.categoria == 'Partido':
-            return f"{self.fecha.date()} - Partido: {self.equipo1} VS {self.equipo2}"
+            return f"{self.fecha.strftime('%Y-%m-%d')} - Partido: {self.equipo1} vs {self.equipo2 or 'TBD'}"
+        elif self.categoria == 'Entrenamiento':
+            return f"{self.fecha.strftime('%Y-%m-%d')} - Entrenamiento ({self.equipo1})"
         else:
-            return f"{self.fecha.date()} - Entrenamiento: {self.equipo1}"
+            return f"{self.fecha.strftime('%Y-%m-%d')} - Reunión ({self.descripcion[:30]}...)"
+
                                                      
 class PermisoPersonalizado(models.Model):
     CATEGORIAS = [
@@ -169,3 +173,15 @@ class PermisoPersonalizado(models.Model):
 
     def __str__(self):
         return f"{self.user.username} → {self.categoria}-{self.equipo}"                                                     
+class CeldaExcel(models.Model):
+    categoria = models.CharField(max_length=20, choices=Jugador.OPCIONES_CATEGORIA)
+    equipo = models.CharField(max_length=1, choices=Jugador.OPCIONES_EQUIPO, default='M') 
+    fila = models.PositiveIntegerField()
+    columna = models.CharField(max_length=5)  # Ej: A, B, C...
+    valor = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('categoria', 'fila', 'columna', 'equipo')
+
+    def __str__(self):
+        return f"{self.categoria} [{self.columna}{self.fila}] = {self.valor}"

@@ -1,240 +1,101 @@
-/* @font-face para las tipografías personalizadas */
-@font-face {
-  font-family: "Jugadores"; /* Nombre de la tipografía */
-  src: url("../fonts/Neuropol.otf");
-  font-weight: normal;
-  font-style: normal;
+/* Fondo general del calendario */
+.rbc-calendar {
+  background-color: #f9f9f9; /* Puedes oscurecerlo si tu app es dark */
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
 }
 
-@font-face {
-  font-family: "Placeholder";
-  src: url("../fonts/Roboto/static/Roboto-Light.ttf");
+/* Día activo y hoy */
+.rbc-today {
+  background-color: #ffeaea !important;
 }
 
-body {
-  background-color: #1d1c1c; /* Color de fondo oscuro */
-  font-family: "Arial", sans-serif; /* Fuente base */
-  color: white; /* Color de texto blanco */
-}
-
-h1 {
-  font-family: "Jugadores"; /* Usar la tipografía personalizada para los títulos */
-  font-size: 2.5rem;
-  color: white;
+/* Cabecera */
+.rbc-header {
+  background-color: #610b1c;
+  color: #ffffff;
+  font-weight: bold;
   text-align: center;
-}
-
-h2,
-p {
-  color: white; /* Color blanco para el texto */
-}
-
-button {
-  border-radius: 5px;
-  font-weight: bold;
-}
-
-button.btn-primary {
-  background-color: #ec0c0c;
+  padding: 10px 0;
   border: none;
 }
 
-button.btn-primary:hover {
-  background-color: #ff3333; /* Rojo más intenso en hover */
+/* Días del mes */
+.rbc-date-cell {
+  padding: 5px;
+  text-align: right;
+  color: #333;
 }
 
-button.btn-success {
-  background-color: #28a745;
+/* Evento */
+.rbc-event {
+  background-color: #ff1e56;
   border: none;
+  color: #fff;
+  padding: 2px 4px;
+  font-size: 0.85rem;
+  border-radius: 4px;
 }
 
-button.btn-success:hover {
-  background-color: #218838; /* Verde más intenso en hover */
+/* Vista mes - líneas de celdas */
+.rbc-month-view {
+  border: 1px solid #ddd;
 }
 
-button.btn-danger {
-  background-color: #dc3545;
+.rbc-day-bg {
+  background-color: #f0f0f0;
+  border: 1px solid #e0e0e0;
+}
+
+.rbc-day-slot .rbc-time-slot {
+  border-top: 1px solid #e0e0e0;
+}
+
+.rbc-time-view,
+.rbc-agenda-view {
+  background-color: #fff;
+}
+
+/* Botones de navegación y labels */
+.rbc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.rbc-toolbar button {
+  background: #610b1c;
+  color: white;
   border: none;
+  padding: 6px 12px;
+  margin: 0 4px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-button.btn-danger:hover {
-  background-color: #c82333; /* Rojo más intenso en hover */
+.rbc-toolbar button:disabled {
+  background: #ccc;
+  color: #444;
+  cursor: not-allowed;
 }
 
-/* Estilo para el calendario */
-#calendar {
-  width: 80%;
-  margin: 20px auto;
-  border-radius: 10px;
-  background-color: #343a40;
-  padding: 15px;
-  font-family: "Placeholder";
-  position: relative;
-  top: -30px;
+.rbc-toolbar button:hover:not(:disabled) {
+  background: #841c2c;
 }
 
-/* Modal para crear evento */
-.modal-content {
-  background-color: #2d2c2c; /* Fondo oscuro para los modales */
-  color: #ff3333; /* Texto rojo */
-  border-radius: 10px;
-}
-
-.modal-header {
-  background-color: #ec0c0c;
-  color: white;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-.modal-body {
-  background-color: #2d2c2c;
-}
-
-.modal-footer {
-  background-color: #343a40;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
-.form-control {
-  background-color: #2d2c2c;
-  color: white;
-  border: 2px solid #343a40;
-  border-radius: 5px;
-}
-
-.form-control:focus {
-  border-color: #ff3333;
-  box-shadow: 0 0 5px #ff3333;
-}
-
-textarea.form-control {
-  resize: vertical;
-}
-
-button.btn-close {
-  background-color: transparent;
-  border: none;
-  color: white;
-}
-
-button.btn-close:hover {
-  color: #ff3333;
-}
-
-.card-header {
-  background-color: #1d1c1c;
-  color: white;
-  padding: 10px 15px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-.card-header a {
-  color: #ff3333;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.card-header a:hover {
-  color: #ec0c0c;
-}
-
-/* Botones de acción */
-#createNewEventBtn,
-#deleteEventBtn {
-  border-radius: 5px;
-  font-weight: bold;
-}
-
-#deleteEventBtn {
-  background-color: #dc3545;
-}
-
-#deleteEventBtn:hover {
-  background-color: #c82333;
-}
-
-#calendarContainer {
-  margin-top: 30px;
-}
-
-/* Estilo para el contenedor de los eventos */
-.event-description {
-  color: white;
-}
-
-/* Estilo para el botón de logout */
-#logout {
-  padding: 0;
-  width: 40px;
-  height: 40px;
-  background: none;
-  border: none;
-  position: absolute;
-  top: 10px;
-  left: 700px;
-}
-
-#logout:hover {
-  background-color: #ff3333;
-  transform: scale(1.35);
-}
-
-#logout img {
+/* Agenda */
+.rbc-agenda-view table {
+  border: 1px solid #ccc;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+}
+.rbc-agenda-view table th,
+.rbc-agenda-view table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 
-/* Filtro en los eventos (icono) */
-#filtro {
-  background-image: url("../images/magnifying-glass.png");
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  border: none;
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  left: 200px;
-}
-
-#filtro:hover {
-  background-image: url("../images/magnifying-glass-white.png");
-  transform: scale(1.15);
-}
-
-#createNewEventBtn {
-  width: 20px; /* Establecer el ancho del botón */
-  height: 20px; /* Establecer la altura del botón para que sea un círculo */
-  border-radius: 50%; /* Hacer el botón redondo */
-  background-color: #fe2727; /* Color de fondo del botón */
-  color: white; /* Color del texto */
-  border: none; /* Quitar el borde */
-  background-image: url(../images/plus-white.png);
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex; /* Usar flexbox para centrar el texto */
-  justify-content: center; /* Centrar el contenido horizontalmente */
-  align-items: center; /* Centrar el contenido verticalmente */
-  cursor: pointer; /* Cambiar el cursor al pasar el ratón */
-  transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
-  position: relative;
-  left: 40px;
-  top: -20px;
-}
-#createNewEventBtn:active,
-#createNewEventBtn:focus {
-  background-color: white;
-  background-image: url(../images/plus-red.png);
-  transform: scale(1.15);
-  transition: transform 0.3s ease, background-image 0.3s ease;
-}
-#createNewEventBtn:hover {
-  background-color: white;
-  background-image: url(../images/plus-red.png);
-  transform: scale(1.15);
-  transition: transform 0.3s ease, background-image 0.3s ease;
+/* Hover y selección */
+.rbc-event:hover {
+  filter: brightness(1.1);
 }

@@ -371,3 +371,17 @@ def opciones_primer_equipo(request):
     equipos = [{'value': e[0], 'label': e[1]} for e in PermisoPersonalizado.EQUIPOS]
 
     return Response({'categorias': categorias, 'equipos': equipos})
+class CeldaExcelViewSet(viewsets.ModelViewSet):
+    serializer_class = CeldaExcelSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        categoria = self.request.query_params.get('categoria')
+        equipo = self.request.query_params.get('equipo')
+        qs = CeldaExcel.objects.all()
+        if categoria:
+            qs = qs.filter(categoria=categoria)
+        if equipo:
+            qs = qs.filter(equipo=equipo)
+
+        return qs
