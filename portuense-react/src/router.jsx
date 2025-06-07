@@ -19,6 +19,7 @@ import AcademiaDireccion from "./pages/DireccionDeportiva/Academia";
 import NuevoComentario from "./pages/NuevoComentario";
 import DocsyExcel from "./pages/DireccionDeportiva/DocsyExcel";
 import ExcelGrid from "./components/ExcelGrid";
+import JugadoresPorCategoria from "./pages/DireccionDeportiva/JugadoresPorCategoria";
 export default function Router() {
   return (
     <BrowserRouter>
@@ -64,6 +65,14 @@ export default function Router() {
         <Route
           path="/direccion-deportiva/academia/:categoria/:equipo/excel"
           element={<ExcelGrid />}
+        />
+        <Route
+          path="/direccion-deportiva/academia/:categoria/:equipo/jugadores"
+          element={<JugadoresPorCategoria />}
+        />
+        <Route
+          path="/direccion-deportiva/primer-equipo/:categoria/:equipo/jugadores"
+          element={<JugadoresPorCategoria />}
         />
       </Routes>
     </BrowserRouter>

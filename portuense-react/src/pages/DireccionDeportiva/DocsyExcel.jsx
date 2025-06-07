@@ -18,7 +18,7 @@ export default function DocsyExcel() {
           className="me-2"
           onClick={() =>
             navigate(
-              `/direccion-deportiva/primer-equipo/${categoria}/${equipo}/pdfs`
+              `/direccion-deportiva/primer-equipo/${categoria}/${equipo}/jugadores`
             )
           }
         >
