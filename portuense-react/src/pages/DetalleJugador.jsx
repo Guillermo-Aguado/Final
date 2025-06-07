@@ -4,6 +4,7 @@ import { Card, Button } from "react-bootstrap";
 import { useAuth } from "../hooks/useAuth";
 import AppHeader from "../components/AppHeader";
 import React from "react";
+import ModalCarpetasPDFs from "../components/ModalCarpetasPDFs";
 
 export default function DetalleJugador() {
   const { id } = useParams();
@@ -11,6 +12,7 @@ export default function DetalleJugador() {
   const [jugador, setJugador] = useState(null);
   const [comentarios, setComentarios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const { isInGroup } = useAuth();
 
   useEffect(() => {
@@ -43,7 +45,9 @@ export default function DetalleJugador() {
   if (loading) return <p className="p-4">Cargando datos del jugador...</p>;
   if (!jugador) return <p className="p-4">Jugador no encontrado</p>;
 
-  const nombreCompleto = `${jugador.nombre} ${jugador.p_apellido || ""} ${jugador.s_apellido || ""}`;
+  const nombreCompleto = `${jugador.nombre} ${jugador.p_apellido || ""} ${
+    jugador.s_apellido || ""
+  }`;
   const esAdmin = isInGroup("admin");
   const esPrimerEquipo = jugador.categoria === "SEN";
 
@@ -60,7 +64,10 @@ export default function DetalleJugador() {
           ← Volver
         </Button>
 
-        <Card className="shadow mx-auto" style={{ width: "700px", height: "auto" }}>
+        <Card
+          className="shadow mx-auto"
+          style={{ width: "700px", height: "auto" }}
+        >
           <Card.Body>
             <div className="d-flex align-items-center mb-4">
               {jugador.imagen ? (
@@ -105,6 +112,14 @@ export default function DetalleJugador() {
                 Ver Contrato
               </Button>
             )}
+            <Button
+              variant="dark"
+              size="sm"
+              onClick={() => setShowModal(true)}
+              className="ms-2"
+            >
+              Ver Documentación
+            </Button>
 
             <p>
               <strong>Posición:</strong> {jugador.posicion}
@@ -127,7 +142,9 @@ export default function DetalleJugador() {
               <Button
                 variant="outline-primary"
                 size="sm"
-                onClick={() => navigate(`/jugadores/${jugador.id}/comentario-nuevo`)}
+                onClick={() =>
+                  navigate(`/jugadores/${jugador.id}/comentario-nuevo`)
+                }
               >
                 Añadir Comentario
               </Button>
@@ -137,7 +154,6 @@ export default function DetalleJugador() {
               <p className="text-muted">No hay comentarios todavía.</p>
             ) : (
               comentarios.map((comentario) => (
-                
                 <div
                   key={comentario.id}
                   className="mb-3 p-3"
@@ -150,9 +166,11 @@ export default function DetalleJugador() {
                   <h6 className="mb-1" style={{ color: "#ff1e56" }}>
                     {comentario.titulo}
                   </h6>
-                  <p style={{ whiteSpace: "pre-wrap" }}>{comentario.contenido}</p>
+                  <p style={{ whiteSpace: "pre-wrap" }}>
+                    {comentario.contenido}
+                  </p>
                   <div className="d-flex justify-content-between mt-2">
-                    <small  style={{ color: "#ff1e56" }}>
+                    <small style={{ color: "#ff1e56" }}>
                       {new Date(comentario.fecha_creacion).toLocaleString()}
                     </small>
                     <small>
@@ -165,6 +183,11 @@ export default function DetalleJugador() {
           </Card.Body>
         </Card>
       </div>
+      <ModalCarpetasPDFs
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        jugadorId={jugador.id}
+      />
     </>
   );
 }
