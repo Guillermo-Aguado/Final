@@ -44,7 +44,7 @@ export default function ModalJugadoresCoinciden({ show, onHide, clubId, filtros 
                 action
                 onClick={() => {
                   onHide(); // cerramos modal
-                  navigate(`/clubes-rivales/${club.id}/jugadores/${jugador.id}`);
+                  navigate(`/clubes-rivales/${clubId}/jugadores/${jugador.id}`);
                 }}
               >
                 {jugador.nombre}
