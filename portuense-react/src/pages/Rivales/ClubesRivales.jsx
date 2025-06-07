@@ -1,6 +1,7 @@
 // src/pages/DireccionDeportiva/ClubesRivales.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ModalJugadoresCoinciden from "../../components/ModalJugadoresCoinciden";
 
 import {
   Table,
@@ -19,10 +20,12 @@ export default function ClubesRivales() {
   const [clubes, setClubes] = useState([]);
   const [conteos, setConteos] = useState({});
   const [filtros, setFiltros] = useState({
-  edad_min: "",
-  edad_max: "",
-  posicion: "",
-});
+    edad_min: "",
+    edad_max: "",
+    posicion: "",
+  });
+  const [modalClubId, setModalClubId] = useState(null);
+
   const [cargando, setCargando] = useState(false);
   const token = sessionStorage.getItem("accessToken");
 
@@ -37,11 +40,14 @@ export default function ClubesRivales() {
   const navigate = useNavigate();
 
   const buscar = async () => {
-    setCargando(true);
-    const params = new URLSearchParams();
+  setCargando(true);
+  const nuevosConteos = {};
 
-    Object.entries(filtros).forEach(([key, value]) => {
-      if (value) params.append(key, value);
+  // Recorremos cada club individualmente
+  for (const club of clubes) {
+    const params = new URLSearchParams({ club: club.id });
+    Object.entries(filtros).forEach(([key, val]) => {
+      if (val) params.append(key, val);
     });
 
     try {
@@ -51,21 +57,17 @@ export default function ClubesRivales() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      const jugadores = await res.json();
-
-      // Agrupar conteos por club_id
-      const agrupados = {};
-      jugadores.forEach((j) => {
-        const clubId = j.club;
-        agrupados[clubId] = (agrupados[clubId] || 0) + 1;
-      });
-      setConteos(agrupados);
+      const data = await res.json();
+      nuevosConteos[club.id] = data.length;
     } catch (err) {
-      console.error("Error al filtrar jugadores:", err);
-    } finally {
-      setCargando(false);
+      console.error(`Error al contar jugadores del club ${club.nombre}`, err);
     }
-  };
+  }
+
+  setConteos(nuevosConteos);
+  setCargando(false);
+};
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,7 +84,6 @@ export default function ClubesRivales() {
         {/* Filtros */}
         <Form className="mb-4">
           <Row>
-            
             <Col md={2}>
               <Form.Control
                 name="edad_min"
@@ -140,7 +141,22 @@ export default function ClubesRivales() {
                 </td>
                 <td>{club.nombre}</td>
                 <td>{club.ciudad}</td>
-                <td>{conteos[club.id] || 0}</td>
+                <td>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <span>{conteos[club.id] || 0}</span>
+                    {conteos[club.id] > 0 && (
+                      <Button
+                        size="sm"
+                        variant="outline-primary"
+                        onClick={() => setModalClubId(club.id)}
+                        className="ms-2"
+                      >
+                        Mostrar
+                      </Button>
+                    )}
+                  </div>
+                </td>
+
                 <td>
                   <Button
                     size="sm"
@@ -157,6 +173,12 @@ export default function ClubesRivales() {
           </tbody>
         </Table>
       </Container>
+      <ModalJugadoresCoinciden
+        show={modalClubId !== null}
+        onHide={() => setModalClubId(null)}
+        clubId={modalClubId}
+        filtros={filtros}
+      />
     </>
   );
 }

@@ -395,11 +395,21 @@ class ClubRivalViewSet(viewsets.ModelViewSet):
 class JugadorRivalViewSet(viewsets.ModelViewSet):
     queryset = JugadorRival.objects.all()
     serializer_class = JugadorRivalSerializer
-    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        club_id = self.request.query_params.get('club')
+        club_id = self.request.query_params.get("club")
+        posicion = self.request.query_params.get("posicion")
+        edad_min = self.request.query_params.get("edad_min")
+        edad_max = self.request.query_params.get("edad_max")
+
         if club_id:
             queryset = queryset.filter(club_id=club_id)
+        if posicion:
+            queryset = queryset.filter(posicion__icontains=posicion)
+        if edad_min:
+            queryset = queryset.filter(edad__gte=edad_min)
+        if edad_max:
+            queryset = queryset.filter(edad__lte=edad_max)
+
         return queryset
