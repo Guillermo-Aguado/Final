@@ -36,7 +36,7 @@ export default function ClubesRivales() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/clubes-rivales/", {
+    fetch("http://portuense-manager.ddns.net:8000/api/clubes-rivales/", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -56,7 +56,7 @@ export default function ClubesRivales() {
 
       try {
         const res = await fetch(
-          `http://localhost:8000/api/jugadores-rivales/?${params.toString()}`,
+          `http://portuense-manager.ddns.net:8000/api/jugadores-rivales/?${params.toString()}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -86,7 +86,7 @@ export default function ClubesRivales() {
     }
 
     try {
-      await fetch("http://localhost:8000/api/clubes-rivales/", {
+      await fetch("http://portuense-manager.ddns.net:8000/api/clubes-rivales/", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -96,7 +96,7 @@ export default function ClubesRivales() {
       setShowCreateModal(false);
       setNuevoClub({ nombre: "", ciudad: "", imagen: null });
       // recargar clubes
-      const res = await fetch("http://localhost:8000/api/clubes-rivales/", {
+      const res = await fetch("http://portuense-manager.ddns.net:8000/api/clubes-rivales/", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();

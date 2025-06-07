@@ -57,7 +57,7 @@ export default function CrearUsuarioModal({ show, onClose }) {
       return { categoria, equipo };
     });
 
-    const res = await fetch('http://localhost:8000/api/crear-usuario/', {
+    const res = await fetch('http://portuense-manager.ddns.net:8000/api/crear-usuario/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -12,7 +12,7 @@ export default function JugadoresDelClub() {
   const token = sessionStorage.getItem("accessToken");
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/jugadores-rivales/?club=${clubId}`, {
+    fetch(`http://portuense-manager.ddns.net:8000/api/jugadores-rivales/?club=${clubId}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())

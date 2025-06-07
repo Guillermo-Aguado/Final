@@ -19,7 +19,7 @@ export default function DetalleJugador() {
     const token = sessionStorage.getItem("accessToken");
 
     // Obtener jugador
-    fetch(`http://localhost:8000/api/jugadores/${id}/`, {
+    fetch(`http://portuense-manager.ddns.net:8000/api/jugadores/${id}/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -32,7 +32,7 @@ export default function DetalleJugador() {
       .catch(() => setLoading(false));
 
     // Obtener comentarios
-    fetch(`http://localhost:8000/api/comentarios-jugador/jugador/${id}/`, {
+    fetch(`http://portuense-manager.ddns.net:8000/api/comentarios-jugador/jugador/${id}/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
