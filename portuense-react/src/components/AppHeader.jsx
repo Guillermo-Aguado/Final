@@ -46,8 +46,6 @@ export default function AppHeader() {
           >
             Portuense Manager
           </span>
-        </Navbar.Brand>
-        <Nav className="me-auto" style={{ marginLeft: "2rem" }}>
           <Nav.Link
             onClick={() => navigate("/direccion-deportiva")}
             style={{ color: "white", fontWeight: "500", fontSize: "1rem" }}
@@ -56,8 +54,6 @@ export default function AppHeader() {
           >
             Dirección Deportiva
           </Nav.Link>
-        </Nav>
-        <Nav className="me-auto" style={{ marginLeft: "2rem" }}>
           <Nav.Link
             onClick={() => navigate("/clubes-rivales")}
             style={{ color: "white", fontWeight: "500", fontSize: "1rem" }}
@@ -66,7 +62,9 @@ export default function AppHeader() {
           >
             Rivales
           </Nav.Link>
-        </Nav>
+        </Navbar.Brand>
+        
+        
         <Nav className="ms-auto">
           <Dropdown align="end">
             <Dropdown.Toggle
