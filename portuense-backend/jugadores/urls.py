@@ -18,6 +18,9 @@ router.register(r'contratos', ContratoViewSet)
 router.register(r'groups', GroupViewSet)
 router.register(r'comentarios-jugador', ComentarioJugadorViewSet)
 router.register(r'excel',CeldaExcelViewSet, basename='excel')
+router.register(r'clubes-rivales', ClubRivalViewSet)
+router.register(r'jugadores-rivales', JugadorRivalViewSet)
+
 urlpatterns = [
     path('api/', include(router.urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

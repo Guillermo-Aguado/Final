@@ -105,3 +105,16 @@ class CeldaExcelSerializer(serializers.ModelSerializer):
     class Meta:
         model = CeldaExcel
         fields = '__all__'
+
+class ClubRivalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClubRival
+        fields = '__all__'
+
+
+class JugadorRivalSerializer(serializers.ModelSerializer):
+    club_nombre = serializers.CharField(source='club.nombre', read_only=True)
+
+    class Meta:
+        model = JugadorRival
+        fields = '__all__'

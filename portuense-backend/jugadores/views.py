@@ -385,3 +385,21 @@ class CeldaExcelViewSet(viewsets.ModelViewSet):
             qs = qs.filter(equipo=equipo)
 
         return qs
+
+class ClubRivalViewSet(viewsets.ModelViewSet):
+    queryset = ClubRival.objects.all()
+    serializer_class = ClubRivalSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class JugadorRivalViewSet(viewsets.ModelViewSet):
+    queryset = JugadorRival.objects.all()
+    serializer_class = JugadorRivalSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        club_id = self.request.query_params.get('club')
+        if club_id:
+            queryset = queryset.filter(club_id=club_id)
+        return queryset

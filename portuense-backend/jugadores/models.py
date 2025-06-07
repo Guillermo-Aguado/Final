@@ -185,3 +185,23 @@ class CeldaExcel(models.Model):
 
     def __str__(self):
         return f"{self.categoria} [{self.columna}{self.fila}] = {self.valor}"
+
+class ClubRival(models.Model):
+    nombre = models.CharField(max_length=100, unique=True)
+    ciudad = models.CharField(max_length=100, blank=True, null=True)
+    categoria = models.CharField(max_length=20, choices=Jugador.OPCIONES_CATEGORIA, blank=True, null=True)
+    equipo = models.CharField(max_length=1, choices=Jugador.OPCIONES_EQUIPO, blank=True, null=True)
+    imagen = models.ImageField(upload_to ='clubes/', blank=True, null=True)
+    def __str__(self):
+        return self.nombre
+class JugadorRival(models.Model):
+    club = models.ForeignKey(ClubRival, related_name='jugadores', on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=100)
+    dorsal = models.PositiveIntegerField(blank=True, null=True)
+    posicion = models.CharField(max_length=50, blank=True)
+    edad = models.PositiveIntegerField(blank=True, null=True)
+    imagen = models.ImageField(upload_to ='rivales/', blank=True, null=True)
+    observaciones = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.nombre} ({self.club.nombre})"
