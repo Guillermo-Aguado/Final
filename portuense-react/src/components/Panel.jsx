@@ -3,12 +3,12 @@ import { Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
-export default function Panel({ title, text, query, children }) {
+export default function Panel({ title, text, query, redirect = "/jugadores", buttonText = "Ver Jugadores", children }) {
   const navigate = useNavigate();
 
   const buildUrl = (queryObj) => {
     const params = new URLSearchParams(queryObj).toString();
-    return `/jugadores?${params}`;
+    return `${redirect}?${params}`;
   };
 
   return (
@@ -17,7 +17,7 @@ export default function Panel({ title, text, query, children }) {
         <Card.Title>{title}</Card.Title>
         <Card.Text>{text}</Card.Text>
         <Button variant="primary" onClick={() => navigate(buildUrl(query))}>
-          Ver Jugadores
+          {buttonText}
         </Button>
         {children && <div className="mt-3">{children}</div>}
       </Card.Body>
