@@ -21,6 +21,8 @@ import NuevoComentario from "./pages/NuevoComentario";
 import DocsyExcel from "./pages/DireccionDeportiva/DocsyExcel";
 import ExcelGrid from "./components/ExcelGrid";
 import JugadoresPorCategoria from "./pages/DireccionDeportiva/JugadoresPorCategoria";
+import JugadoresDelClub from "./pages/Rivales/JugadoresdelClub";
+import DetalleJugadorRival from "./pages/Rivales/DetalleJugadorRival";
 export default function Router() {
   return (
     <BrowserRouter>
@@ -44,11 +46,18 @@ export default function Router() {
           path="/direccion-deportiva/academia"
           element={<AcademiaDireccion />}
         />
-        
+
         <Route path="/usuarios" element={<UserManager />} />
         <Route path="/cuotas" element={<PaginaCuotas />} />
         <Route path="/direccion-deportiva" element={<DireccionDeportiva />} />
-        <Route path="/clubes-rivales" element={<ClubesRivales/>}/>
+        <Route path="/clubes-rivales" element={<ClubesRivales />} />
+        <Route
+          path="/clubes-rivales/:clubId/jugadores"
+          element={<JugadoresDelClub />}
+        >
+          <Route path=":jugadorId" element={<DetalleJugadorRival />} />
+        </Route>
+
         <Route
           path="/direccion-deportiva/primer-equipo"
           element={<PrimerEquipoDireccion />}
