@@ -10,7 +10,7 @@ import { useCallback } from "react";
 import { Button } from "react-bootstrap";
 import BackButton from "../components/BackButton";
 import AppHeader from "../components/AppHeader";
-// import './Calendario.css';
+import './Calendario.css';
 import React from 'react';
 
 const locales = { es };
