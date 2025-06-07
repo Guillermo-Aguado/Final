@@ -173,3 +173,14 @@ class PermisoPersonalizado(models.Model):
 
     def __str__(self):
         return f"{self.user.username} → {self.categoria}-{self.equipo}"                                                     
+class CeldaExcel(models.Model):
+    categoria = models.CharField(max_length=20, choices=Jugador.OPCIONES_CATEGORIA)
+    fila = models.PositiveIntegerField()
+    columna = models.CharField(max_length=5)  # Ej: A, B, C...
+    valor = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('categoria', 'fila', 'columna')
+
+    def __str__(self):
+        return f"{self.categoria} [{self.columna}{self.fila}] = {self.valor}"
