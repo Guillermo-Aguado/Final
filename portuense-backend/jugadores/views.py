@@ -119,7 +119,7 @@ def actualizar_usuario(request, user_id):
     return Response({'message': 'Usuario actualizado correctamente'})
 
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+# @permission_classes([IsAdminUser])
 def crear_usuario(request):
     data = request.data
     username = data.get('username')

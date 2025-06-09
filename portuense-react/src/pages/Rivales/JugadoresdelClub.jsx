@@ -1,18 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
-import { Container, Card, Button, Spinner, Row, Col } from "react-bootstrap";
+import {
+  Container,
+  Card,
+  Button,
+  Spinner,
+  Row,
+  Col,
+  Modal,
+  Form,
+} from "react-bootstrap";
 import AppHeader from "../../components/AppHeader";
 import BackButton from "../../components/BackButton";
+const token = sessionStorage.getItem("accessToken");
 
 export default function JugadoresDelClub() {
   const { clubId } = useParams();
   const [jugadores, setJugadores] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    nombre: "",
+    dorsal: "",
+    posicion: "",
+    edad: "",
+    imagen: null,
+    observaciones: "",
+  });
+
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("accessToken");
+  
 
   useEffect(() => {
-    fetch(`http://portuense-manager.ddns.net:8000/api/jugadores-rivales/?club=${clubId}`, {
+    fetch(`http://localhost:8000/api/jugadores-rivales/?club=${clubId}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -22,12 +42,58 @@ export default function JugadoresDelClub() {
       });
   }, [clubId, token]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formPayload = new FormData();
+
+    formPayload.append("club", clubId);
+    formPayload.append("nombre", formData.nombre);
+    if (formData.dorsal) formPayload.append("dorsal", formData.dorsal);
+    if (formData.posicion) formPayload.append("posicion", formData.posicion);
+    if (formData.edad) formPayload.append("edad", formData.edad);
+    if (formData.imagen) formPayload.append("imagen", formData.imagen);
+    if (formData.observaciones) formPayload.append("observaciones", formData.observaciones);
+
+    try {
+      const res = await fetch("http://localhost:8000/api/jugadores-rivales/", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formPayload,
+      });
+
+      if (res.ok) {
+        const nuevo = await res.json();
+        setJugadores((prev) => [...prev, nuevo]);
+        setShowModal(false);
+        setFormData({
+          nombre: "",
+          dorsal: "",
+          posicion: "",
+          edad: "",
+          imagen: null,
+          observaciones: "",
+        });
+      } else {
+        alert("Error al crear jugador");
+      }
+    } catch (err) {
+      console.error("Error al crear jugador", err);
+    }
+  };
+
   return (
     <>
       <AppHeader />
       <Container className="mt-4">
         <BackButton to="/clubes-rivales" />
-        <h3 className="mb-4">Jugadores del Club</h3>
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h3 className="mb-0">Jugadores del Club</h3>
+          <Button variant="success" onClick={() => setShowModal(true)}>
+            Añadir Jugador
+          </Button>
+        </div>
 
         {loading ? (
           <Spinner animation="border" />
@@ -45,7 +111,7 @@ export default function JugadoresDelClub() {
                     <Button
                       variant="info"
                       size="sm"
-                      onClick={() => navigate(`${jugador.id}`)} // navegación relativa
+                      onClick={() => navigate(`${jugador.id}`)}
                     >
                       Ver Detalle
                     </Button>
@@ -56,9 +122,84 @@ export default function JugadoresDelClub() {
           </Row>
         )}
 
-        {/* Renderiza el componente DetalleJugadorRival si está en la ruta */}
         <Outlet />
       </Container>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Nuevo Jugador Rival</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit} encType="multipart/form-data">
+            <Form.Group className="mb-3">
+              <Form.Label>Nombre</Form.Label>
+              <Form.Control
+                type="text"
+                value={formData.nombre}
+                onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Dorsal</Form.Label>
+              <Form.Control
+                type="number"
+                value={formData.dorsal}
+                onChange={(e) => setFormData({ ...formData, dorsal: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Posición</Form.Label>
+              <Form.Control
+                type="text"
+                value={formData.posicion}
+                onChange={(e) => setFormData({ ...formData, posicion: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Edad</Form.Label>
+              <Form.Control
+                type="number"
+                value={formData.edad}
+                onChange={(e) => setFormData({ ...formData, edad: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Imagen</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFormData({ ...formData, imagen: e.target.files[0] })}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Observaciones</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={formData.observaciones}
+                onChange={(e) =>
+                  setFormData({ ...formData, observaciones: e.target.value })
+                }
+              />
+            </Form.Group>
+
+            <div className="d-flex justify-content-end">
+              <Button variant="secondary" onClick={() => setShowModal(false)} className="me-2">
+                Cancelar
+              </Button>
+              <Button variant="primary" type="submit">
+                Guardar
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </>
   );
 }

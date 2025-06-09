@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   Modal,
   Button,
@@ -7,22 +7,22 @@ import {
   Col,
   Toast,
   ToastContainer,
-} from 'react-bootstrap';
-import { getToken } from '../utils/auth';
-import React from 'react';
+} from "react-bootstrap";
+// import { getToken } from '../utils/auth';
+import React from "react";
 
-const categorias = ['PREBEN', 'BEN', 'ALE', 'INF', 'CAD', 'JUV', 'SEN'];
-const equipos = ['M', 'F'];
-const gruposDisponibles = ['admin', 'coordinador', 'entrenador'];
+const categorias = ["PREBEN", "BEN", "ALE", "INF", "CAD", "JUV", "SEN"];
+const equipos = ["M", "F"];
+const gruposDisponibles = ["admin", "coordinador", "entrenador"];
 
 export default function CrearUsuarioModal({ show, onClose }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [grupo, setGrupo] = useState('entrenador');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [grupo, setGrupo] = useState("entrenador");
   const [permisos, setPermisos] = useState([]);
 
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
+  const [toastMessage, setToastMessage] = useState("");
 
   const allPermisos = categorias.flatMap((cat) =>
     equipos.map((eq) => `${cat}-${eq}`)
@@ -41,9 +41,9 @@ export default function CrearUsuarioModal({ show, onClose }) {
   };
 
   const resetFormulario = () => {
-    setUsername('');
-    setPassword('');
-    setGrupo('entrenador');
+    setUsername("");
+    setPassword("");
+    setGrupo("entrenador");
     setPermisos([]);
   };
 
@@ -53,31 +53,44 @@ export default function CrearUsuarioModal({ show, onClose }) {
 
   const handleSubmit = async () => {
     const permisosData = permisos.map((p) => {
-      const [categoria, equipo] = p.split('-');
+      const [categoria, equipo] = p.split("-");
       return { categoria, equipo };
     });
-
-    const res = await fetch('http://portuense-manager.ddns.net:8000/api/crear-usuario/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getToken()}`,
-      },
-      body: JSON.stringify({ username, password, grupo, permisos: permisosData }),
-    });
+    const token = sessionStorage.getItem("accessToken");
+    const res = await fetch(
+      "http://localhost:8000/api/crear-usuario/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          grupo,
+          permisos: permisosData,
+        }),
+      }
+    );
 
     if (res.ok) {
       setToastMessage(`Usuario "${username}" creado con éxito`);
       setShowToast(true);
       onClose(true);
     } else {
-      alert('Error al crear el usuario');
+      alert("Error al crear el usuario");
     }
   };
 
   return (
     <>
-      <Modal show={show} onHide={() => onClose(false)} size="lg" backdrop="static">
+      <Modal
+        show={show}
+        onHide={() => onClose(false)}
+        size="lg"
+        backdrop="static"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Crear Nuevo Usuario</Modal.Title>
         </Modal.Header>
@@ -102,7 +115,10 @@ export default function CrearUsuarioModal({ show, onClose }) {
 
             <Form.Group className="mb-4">
               <Form.Label>Grupo</Form.Label>
-              <Form.Select value={grupo} onChange={(e) => setGrupo(e.target.value)}>
+              <Form.Select
+                value={grupo}
+                onChange={(e) => setGrupo(e.target.value)}
+              >
                 {gruposDisponibles.map((g) => (
                   <option key={g} value={g}>
                     {g.charAt(0).toUpperCase() + g.slice(1)}
@@ -120,8 +136,8 @@ export default function CrearUsuarioModal({ show, onClose }) {
                 onClick={toggleTodos}
               >
                 {permisos.length === allPermisos.length
-                  ? 'Desmarcar todos'
-                  : 'Seleccionar todos'}
+                  ? "Desmarcar todos"
+                  : "Seleccionar todos"}
               </Button>
             </h5>
 
@@ -136,7 +152,7 @@ export default function CrearUsuarioModal({ show, onClose }) {
                         key={key}
                         type="checkbox"
                         id={key}
-                        label={eq === 'M' ? 'Masculino' : 'Femenino'}
+                        label={eq === "M" ? "Masculino" : "Femenino"}
                         checked={permisos.includes(key)}
                         onChange={() => togglePermiso(cat, eq)}
                       />
@@ -151,7 +167,11 @@ export default function CrearUsuarioModal({ show, onClose }) {
           <Button variant="secondary" onClick={() => onClose(false)}>
             Cancelar
           </Button>
-          <Button variant="primary" onClick={handleSubmit} disabled={!username || !password}>
+          <Button
+            variant="primary"
+            onClick={handleSubmit}
+            disabled={!username || !password}
+          >
             Crear Usuario
           </Button>
         </Modal.Footer>
