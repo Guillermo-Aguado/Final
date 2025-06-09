@@ -14,6 +14,7 @@ export default function DetalleJugador() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const { isInGroup } = useAuth();
+  const [hoveredComentarioId, setHoveredComentarioId] = useState(null);
 
   useEffect(() => {
     const token = sessionStorage.getItem("accessToken");
@@ -50,6 +51,27 @@ export default function DetalleJugador() {
   }`;
   const esAdmin = isInGroup("admin");
   const esPrimerEquipo = jugador.categoria === "SEN";
+  const eliminarComentario = (comentarioId) => {
+    const token = sessionStorage.getItem("accessToken");
+    if (window.confirm("¿Seguro que quieres eliminar este comentario?")) {
+      fetch(`http://localhost:8000/api/comentarios-jugador/${comentarioId}/`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          if (res.ok) {
+            setComentarios((prev) =>
+              prev.filter((comentario) => comentario.id !== comentarioId)
+            );
+          } else {
+            alert("Error al eliminar el comentario.");
+          }
+        })
+        .catch(() => alert("Error al conectar con el servidor."));
+    }
+  };
 
   return (
     <>
@@ -102,16 +124,7 @@ export default function DetalleJugador() {
               </div>
             </div>
 
-            {esAdmin && esPrimerEquipo && (
-              <Button
-                variant="info"
-                size="sm"
-                className="mb-3"
-                onClick={() => navigate(`/jugadores/${jugador.id}/contrato`)}
-              >
-                Ver Contrato
-              </Button>
-            )}
+            {/*            
             <Button
               variant="dark"
               size="sm"
@@ -119,7 +132,7 @@ export default function DetalleJugador() {
               className="ms-2"
             >
               Ver Documentación
-            </Button>
+            </Button> */}
 
             <p>
               <strong>Posición:</strong> {jugador.posicion}
@@ -156,12 +169,14 @@ export default function DetalleJugador() {
               comentarios.map((comentario) => (
                 <div
                   key={comentario.id}
-                  className="mb-3 p-3"
+                  className="mb-3 p-3 position-relative"
                   style={{
                     backgroundColor: "#1a1a1a",
                     border: "1px solid #ff1e5630",
                     borderRadius: "8px",
                   }}
+                  onMouseEnter={() => setHoveredComentarioId(comentario.id)}
+                  onMouseLeave={() => setHoveredComentarioId(null)}
                 >
                   <h6 className="mb-1" style={{ color: "#ff1e56" }}>
                     {comentario.titulo}
@@ -177,6 +192,22 @@ export default function DetalleJugador() {
                       <strong>{comentario.autor.username}</strong>
                     </small>
                   </div>
+
+                  {hoveredComentarioId === comentario.id && (
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      style={{
+                        position: "absolute",
+                        top: "8px",
+                        right: "8px",
+                        zIndex: 2,
+                      }}
+                      onClick={() => eliminarComentario(comentario.id)}
+                    >
+                      Eliminar
+                    </Button>
+                  )}
                 </div>
               ))
             )}
