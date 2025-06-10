@@ -173,18 +173,24 @@ class PermisoPersonalizado(models.Model):
 
     def __str__(self):
         return f"{self.user.username} → {self.categoria}-{self.equipo}"                                                     
-class CeldaExcel(models.Model):
-    categoria = models.CharField(max_length=20, choices=Jugador.OPCIONES_CATEGORIA)
-    equipo = models.CharField(max_length=1, choices=Jugador.OPCIONES_EQUIPO, default='M') 
-    fila = models.PositiveIntegerField()
-    columna = models.CharField(max_length=5)  # Ej: A, B, C...
-    valor = models.TextField(blank=True, null=True)
+class ExcelPorCategoria(models.Model):
+    categoria = models.CharField(
+        max_length=20,
+        choices=Jugador.OPCIONES_CATEGORIA
+    )
+    equipo = models.CharField(
+        max_length=1,
+        choices=Jugador.OPCIONES_EQUIPO,
+        default='M'
+    )
+    archivo = models.FileField(upload_to='excels/')
+    nombre = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
-        unique_together = ('categoria', 'fila', 'columna', 'equipo')
+        unique_together = ('categoria', 'equipo')
 
     def __str__(self):
-        return f"{self.categoria} [{self.columna}{self.fila}] = {self.valor}"
+        return f"{self.nombre or 'Excel'} - {self.categoria} ({self.equipo})"
 
 class ClubRival(models.Model):
     nombre = models.CharField(max_length=100, unique=True)

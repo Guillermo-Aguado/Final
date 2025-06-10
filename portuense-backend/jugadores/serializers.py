@@ -101,10 +101,14 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ['id', 'name']
-class CeldaExcelSerializer(serializers.ModelSerializer):
+# serializers.py
+
+
+class ExcelPorCategoriaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CeldaExcel
+        model = ExcelPorCategoria
         fields = '__all__'
+
 
 class ClubRivalSerializer(serializers.ModelSerializer):
     class Meta:

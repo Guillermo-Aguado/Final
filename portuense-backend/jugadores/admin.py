@@ -11,7 +11,7 @@ admin.site.register(Panel)
 admin.site.register(Contrato)
 admin.site.register(PermisoPersonalizado)
 admin.site.register(ComentarioJugador)
-admin.site.register(CeldaExcel)
+
 admin.site.register(JugadorRival)
 admin.site.register(ClubRival)
 admin.site.register(ComentarioRival)
