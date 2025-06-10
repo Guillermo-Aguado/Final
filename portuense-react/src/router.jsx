@@ -23,7 +23,8 @@ import ExcelGrid from "./components/ExcelGrid";
 import JugadoresPorCategoria from "./pages/DireccionDeportiva/JugadoresPorCategoria";
 import JugadoresDelClub from "./pages/Rivales/JugadoresdelClub";
 import DetalleJugadorRival from "./pages/Rivales/DetalleJugadorRival";
-import ClubDetalle from "./pages/Rivales/ClubDetalle"
+import ClubDetalle from "./pages/Rivales/ClubDetalle";
+import ExcelPorCategoria from "./pages/DireccionDeportiva/ExcelPorCategoria";
 export default function Router() {
   return (
     <BrowserRouter>
@@ -88,7 +89,10 @@ export default function Router() {
           element={<JugadoresPorCategoria />}
         />
         <Route path="/clubes-rivales/:id" element={<ClubDetalle />} />
-
+        <Route
+          path="/direccion-deportiva/primer-equipo/:categoria/:equipo/excel"
+          element={<ExcelPorCategoria />}
+        />
       </Routes>
     </BrowserRouter>
   );
