@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import AppHeader from "../../components/AppHeader";
 import BackButton from "../../components/BackButton";
+
 const token = sessionStorage.getItem("accessToken");
 
 export default function JugadoresDelClub() {
@@ -29,7 +30,6 @@ export default function JugadoresDelClub() {
   });
 
   const navigate = useNavigate();
-  
 
   useEffect(() => {
     fetch(`http://localhost:8000/api/jugadores-rivales/?club=${clubId}`, {
@@ -40,12 +40,11 @@ export default function JugadoresDelClub() {
         setJugadores(data);
         setLoading(false);
       });
-  }, [clubId, token]);
+  }, [clubId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formPayload = new FormData();
-
     formPayload.append("club", clubId);
     formPayload.append("nombre", formData.nombre);
     if (formData.dorsal) formPayload.append("dorsal", formData.dorsal);
@@ -83,6 +82,28 @@ export default function JugadoresDelClub() {
     }
   };
 
+  const eliminarJugador = async (id) => {
+    const confirm = window.confirm("¿Seguro que deseas eliminar este jugador?");
+    if (!confirm) return;
+
+    try {
+      const res = await fetch(`http://localhost:8000/api/jugadores-rivales/${id}/`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        setJugadores((prev) => prev.filter((j) => j.id !== id));
+      } else {
+        alert("No se pudo eliminar el jugador.");
+      }
+    } catch (err) {
+      alert("Error al conectar con el servidor.");
+    }
+  };
+
   return (
     <>
       <AppHeader />
@@ -108,13 +129,22 @@ export default function JugadoresDelClub() {
                       <strong>Posición:</strong> {jugador.posicion} <br />
                       <strong>Edad:</strong> {jugador.edad}
                     </Card.Text>
-                    <Button
-                      variant="info"
-                      size="sm"
-                      onClick={() => navigate(`${jugador.id}`)}
-                    >
-                      Ver Detalle
-                    </Button>
+                    <div className="d-flex justify-content-between">
+                      <Button
+                        variant="info"
+                        size="sm"
+                        onClick={() => navigate(`${jugador.id}`)}
+                      >
+                        Ver Detalle
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => eliminarJugador(jugador.id)}
+                      >
+                        Eliminar
+                      </Button>
+                    </div>
                   </Card.Body>
                 </Card>
               </Col>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ModalJugadoresCoinciden from "../../components/ModalJugadoresCoinciden";
 import {
@@ -35,13 +36,17 @@ export default function ClubesRivales() {
   const token = sessionStorage.getItem("accessToken");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch("http://lcoalhost:8000/api/clubes-rivales/", {
+  const cargarClubes = () => {
+    fetch("http://localhost:8000/api/clubes-rivales/", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
       .then(setClubes)
       .catch((err) => console.error("Error al cargar clubes:", err));
+  };
+
+  useEffect(() => {
+    cargarClubes();
   }, [token]);
 
   const buscar = async () => {
@@ -72,6 +77,29 @@ export default function ClubesRivales() {
     setCargando(false);
   };
 
+  const eliminarClub = async (id) => {
+    const confirmar = window.confirm("¿Seguro que deseas eliminar este club?");
+    if (!confirmar) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:8000/api/clubes-rivales/${id}/`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.ok) {
+        setClubes((prev) => prev.filter((club) => club.id !== id));
+      } else {
+        alert("No se pudo eliminar el club.");
+      }
+    } catch (err) {
+      alert("Error al conectar con el servidor.");
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFiltros((prev) => ({ ...prev, [name]: value }));
@@ -88,19 +116,12 @@ export default function ClubesRivales() {
     try {
       await fetch("http://localhost:8000/api/clubes-rivales/", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
       setShowCreateModal(false);
       setNuevoClub({ nombre: "", ciudad: "", imagen: null });
-      // recargar clubes
-      const res = await fetch("http://localhost:8000/api/clubes-rivales/", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      setClubes(data);
+      cargarClubes();
     } catch (err) {
       console.error("Error al crear club:", err);
     }
@@ -118,7 +139,6 @@ export default function ClubesRivales() {
           </Button>
         </div>
 
-        {/* Filtros */}
         <Form className="mb-4">
           <Row>
             <Col md={2}>
@@ -155,7 +175,6 @@ export default function ClubesRivales() {
           </Row>
         </Form>
 
-        {/* Tabla de clubes */}
         <Table striped bordered hover responsive>
           <thead>
             <tr>
@@ -164,6 +183,7 @@ export default function ClubesRivales() {
               <th>Ciudad</th>
               <th>Jugadores que coinciden</th>
               <th>Ver todos</th>
+              <th>Acciones</th> {/* 🔥 Nueva columna */}
             </tr>
           </thead>
           <tbody>
@@ -176,7 +196,10 @@ export default function ClubesRivales() {
                     <span>Sin imagen</span>
                   )}
                 </td>
-                <td>{club.nombre}</td>
+                <td>
+                  <Link to={`/clubes-rivales/${club.id}`}>{club.nombre}</Link>
+                </td>
+
                 <td>{club.ciudad}</td>
                 <td>
                   <div className="d-flex align-items-center justify-content-between">
@@ -204,13 +227,22 @@ export default function ClubesRivales() {
                     Ver Jugadores
                   </Button>
                 </td>
+                <td>
+                  <Button
+                    size="sm"
+                    variant="danger"
+                    onClick={() => eliminarClub(club.id)}
+                  >
+                    Eliminar
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
         </Table>
       </Container>
 
-      {/* Modal de creación de club */}
+      {/* Modal de creación */}
       <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Crear nuevo Club</Modal.Title>
@@ -259,6 +291,7 @@ export default function ClubesRivales() {
         </Modal.Footer>
       </Modal>
 
+      {/* Modal jugadores que coinciden */}
       <ModalJugadoresCoinciden
         show={modalClubId !== null}
         onHide={() => setModalClubId(null)}

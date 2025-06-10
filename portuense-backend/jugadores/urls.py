@@ -21,6 +21,7 @@ router.register(r'excel',CeldaExcelViewSet, basename='excel')
 router.register(r'clubes-rivales', ClubRivalViewSet)
 router.register(r'jugadores-rivales', JugadorRivalViewSet)
 router.register(r'comentarios-rivales',ComentarioRivalViewset)
+router.register(r'comentarios-club-rival', ComentarioClubRivalViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),

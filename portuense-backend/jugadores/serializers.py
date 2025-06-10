@@ -124,3 +124,14 @@ class ComentarioRivalSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComentarioRival
         fields= '__all__'
+class ComentarioClubRivalSerializer(serializers.ModelSerializer):
+    autor = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ComentarioClubRival
+        fields = '__all__'
+
+    def get_autor(self, obj):
+        if obj.autor:
+            return {"id": obj.autor.id, "username": obj.autor.username}
+        return None

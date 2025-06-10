@@ -417,3 +417,22 @@ class JugadorRivalViewSet(viewsets.ModelViewSet):
 class ComentarioRivalViewset(viewsets.ModelViewSet):
     queryset = ComentarioRival.objects.all()
     serializer_class = ComentarioRivalSerializer
+    permission_classes=[IsAuthenticated]
+    @action(detail=False, methods=['get'], url_path='jugador/(?P<jugador_id>[^/.]+)')
+    def por_jugador(self, request, jugador_id=None):
+        comentarios = self.get_queryset().filter(jugador_id=jugador_id)
+        serializer = self.get_serializer(comentarios, many=True)
+        return Response(serializer.data)
+class ComentarioClubRivalViewSet(viewsets.ModelViewSet):
+    queryset = ComentarioClubRival.objects.select_related("autor", "club").all().order_by('-fecha_creacion')
+    serializer_class = ComentarioClubRivalSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(autor=self.request.user)
+
+    @action(detail=False, methods=["get"], url_path="club/(?P<club_id>[^/.]+)")
+    def por_club(self, request, club_id=None):
+        comentarios = ComentarioClubRival.objects.filter(club_id=club_id).select_related("autor")
+        serializer = self.get_serializer(comentarios, many=True)
+        return Response(serializer.data)
