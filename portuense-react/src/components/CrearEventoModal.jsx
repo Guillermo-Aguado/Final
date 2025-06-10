@@ -4,7 +4,7 @@ import React from "react";
 
 export default function CrearEventoModal({ show, onClose, fecha, tipo: tipoInicial }) {
   const [descripcion, setDescripcion] = useState("");
-  const [equipo1, setEquipo1] = useState("Portuense F.C.");
+  const [equipo1, setEquipo1] = useState("R.C. Portuense");
   const [equipo2, setEquipo2] = useState("");
   const [localizacion, setLocalizacion] = useState("");
   const [tipo, setTipo] = useState(tipoInicial || "Entrenamiento");
@@ -96,7 +96,7 @@ export default function CrearEventoModal({ show, onClose, fecha, tipo: tipoInici
               type="text"
               value={descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
-              required
+              
             />
           </Form.Group>
 

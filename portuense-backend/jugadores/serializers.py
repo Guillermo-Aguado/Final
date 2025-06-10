@@ -118,3 +118,9 @@ class JugadorRivalSerializer(serializers.ModelSerializer):
     class Meta:
         model = JugadorRival
         fields = '__all__'
+        
+class ComentarioRivalSerializer(serializers.ModelSerializer):
+    autor_nombre = serializers.CharField(source='autor.username', read_only=True)
+    class Meta:
+        model = ComentarioRival
+        fields= '__all__'

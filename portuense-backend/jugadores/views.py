@@ -395,6 +395,7 @@ class ClubRivalViewSet(viewsets.ModelViewSet):
 class JugadorRivalViewSet(viewsets.ModelViewSet):
     queryset = JugadorRival.objects.all()
     serializer_class = JugadorRivalSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -413,3 +414,6 @@ class JugadorRivalViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(edad__lte=edad_max)
 
         return queryset
+class ComentarioRivalViewset(viewsets.ModelViewSet):
+    queryset = ComentarioRival.objects.all()
+    serializer_class = ComentarioRivalSerializer

@@ -67,8 +67,8 @@ class ComentarioJugador(models.Model):
     autor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     titulo = models.CharField(max_length=100)
     contenido = models.TextField()
-    fecha_emision = models.DateField()
-    fecha_creacion = models.DateField()
+    fecha_emision = models.DateField(null=True)
+    fecha_creacion = models.DateField(null=True)
 
     def __str__(self):
         return f"{self.titulo} ({self.jugador.nombre})"
@@ -205,3 +205,13 @@ class JugadorRival(models.Model):
 
     def __str__(self):
         return f"{self.nombre} ({self.club.nombre})"
+class ComentarioRival(models.Model):
+    jugador = models.ForeignKey('JugadorRival', on_delete=models.CASCADE, related_name='comentarios')
+    autor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    titulo = models.CharField(max_length=100)
+    contenido = models.TextField()
+    fecha_emision = models.DateField(null=True)
+    fecha_creacion = models.DateField(null=True)
+
+    def __str__(self):
+        return f"{self.titulo} ({self.jugador.nombre})"
